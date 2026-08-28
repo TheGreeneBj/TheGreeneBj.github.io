@@ -1003,7 +1003,15 @@ function logSliderEvent(deptId, newValue) {
 async function sendToSheets(payload) {
   if (!LOGGING_ENABLED) return;
   try {
-    await fetch(APPS_SCRIPT_URL, {method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    // no-cors POST strips the body -- use a GET with encoded data instead
+    const encoded = encodeURIComponent(JSON.stringify(payload));
+    const url = APPS_SCRIPT_URL + "?data=" + encoded;
+    // Use an image ping -- fires cross-origin with no CORS issues, no body needed
+    // Apps Script reads from e.parameter.data in doGet
+    const img = new Image();
+    img.src = url;
+    // Also try fetch GET as fallback
+    fetch(url, {mode:"no-cors"}).catch(()=>{});
   } catch(e) {}
 }
 
@@ -1037,55 +1045,6 @@ window.addEventListener("scroll", ()=>{
 },{passive:true});
 
 
-// ── Connection test ────────────────────────────────────────────
-async function testConnection() {
-  const statusEl = document.getElementById('log-status');
-  if (!LOGGING_ENABLED) {
-    statusEl.style.background = '#FEF3C7';
-    statusEl.style.color = '#92400E';
-    statusEl.style.borderColor = '#FCD34D';
-    statusEl.textContent = 'URL not set. Find YOUR_APPS_SCRIPT_URL_HERE in the HTML and replace it with your Apps Script deployment URL.';
-    return;
-  }
-
-  statusEl.style.background = '#EDE8DF';
-  statusEl.style.color = 'var(--text3)';
-  statusEl.textContent = 'Sending test ping...';
-
-  try {
-    // Send a test ping — no-cors means we cant read the response,
-    // but if the network request goes out without a network error, the URL is reachable.
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 6000);
-
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'ping', sessionId: SESSION.id, timestamp: Date.now() }),
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-
-    // If we get here without throwing, the request went out.
-    // With no-cors we cant confirm the server response, but no network error = URL is valid.
-    statusEl.style.background = '#ECFDF5';
-    statusEl.style.color = '#065F46';
-    statusEl.style.borderColor = '#6EE7B7';
-    statusEl.textContent = 'Ping sent. Check your Google Sheet for a new row with type="ping". If it appears, logging is working.';
-
-  } catch(e) {
-    const isAbort = e.name === 'AbortError';
-    statusEl.style.background = '#FEF2F2';
-    statusEl.style.color = '#991B1B';
-    statusEl.style.borderColor = '#FCA5A5';
-    if (isAbort) {
-      statusEl.textContent = 'Timed out. Check: (1) URL is correct, (2) script is deployed as "Anyone", (3) you authorized the script.';
-    } else {
-      statusEl.textContent = 'Network error: ' + e.message + '. Make sure the Apps Script is deployed and the URL is pasted correctly.';
-    }
-  }
-}
 
 collectDevice();
 collectLocation();
@@ -2087,7 +2046,15 @@ function logSliderEvent(deptId, newValue) {
 async function sendToSheets(payload) {
   if (!LOGGING_ENABLED) return;
   try {
-    await fetch(APPS_SCRIPT_URL, {method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    // no-cors POST strips the body -- use a GET with encoded data instead
+    const encoded = encodeURIComponent(JSON.stringify(payload));
+    const url = APPS_SCRIPT_URL + "?data=" + encoded;
+    // Use an image ping -- fires cross-origin with no CORS issues, no body needed
+    // Apps Script reads from e.parameter.data in doGet
+    const img = new Image();
+    img.src = url;
+    // Also try fetch GET as fallback
+    fetch(url, {mode:"no-cors"}).catch(()=>{});
   } catch(e) {}
 }
 
@@ -2121,55 +2088,6 @@ window.addEventListener("scroll", ()=>{
 },{passive:true});
 
 
-// ── Connection test ────────────────────────────────────────────
-async function testConnection() {
-  const statusEl = document.getElementById('log-status');
-  if (!LOGGING_ENABLED) {
-    statusEl.style.background = '#FEF3C7';
-    statusEl.style.color = '#92400E';
-    statusEl.style.borderColor = '#FCD34D';
-    statusEl.textContent = 'URL not set. Find YOUR_APPS_SCRIPT_URL_HERE in the HTML and replace it with your Apps Script deployment URL.';
-    return;
-  }
-
-  statusEl.style.background = '#EDE8DF';
-  statusEl.style.color = 'var(--text3)';
-  statusEl.textContent = 'Sending test ping...';
-
-  try {
-    // Send a test ping — no-cors means we cant read the response,
-    // but if the network request goes out without a network error, the URL is reachable.
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 6000);
-
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'ping', sessionId: SESSION.id, timestamp: Date.now() }),
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-
-    // If we get here without throwing, the request went out.
-    // With no-cors we cant confirm the server response, but no network error = URL is valid.
-    statusEl.style.background = '#ECFDF5';
-    statusEl.style.color = '#065F46';
-    statusEl.style.borderColor = '#6EE7B7';
-    statusEl.textContent = 'Ping sent. Check your Google Sheet for a new row with type="ping". If it appears, logging is working.';
-
-  } catch(e) {
-    const isAbort = e.name === 'AbortError';
-    statusEl.style.background = '#FEF2F2';
-    statusEl.style.color = '#991B1B';
-    statusEl.style.borderColor = '#FCA5A5';
-    if (isAbort) {
-      statusEl.textContent = 'Timed out. Check: (1) URL is correct, (2) script is deployed as "Anyone", (3) you authorized the script.';
-    } else {
-      statusEl.textContent = 'Network error: ' + e.message + '. Make sure the Apps Script is deployed and the URL is pasted correctly.';
-    }
-  }
-}
 
 collectDevice();
 collectLocation();
