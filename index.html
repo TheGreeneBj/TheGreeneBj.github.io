@@ -29,37 +29,146 @@
   --green-bg:   #EAF7F1;
   --red:        #C0392B;
   --amber:      #B7770D;
-
-  --safety:    #1E4B8E;
-  --infra:     #7A4F1E;
-  --human:     #2D6A4F;
-  --admin:     #5B3D7A;
-
+  --safety:     #1E4B8E;
+  --infra:      #7A4F1E;
+  --human:      #2D6A4F;
+  --admin:      #5B3D7A;
   --font-serif: 'Source Serif 4', Georgia, serif;
   --font-mono:  'DM Mono', monospace;
   --font-sans:  system-ui, -apple-system, sans-serif;
   --r:          6px;
   --r-lg:       12px;
-
   --slider-max: 37400000;
 }
 
 html { scroll-behavior: smooth; }
 body { font-family: var(--font-sans); background: var(--cream); color: var(--text); min-height: 100vh; }
 
-/* ── Site header ── */
-.site-header {
-  background: var(--city-blue); color: white;
-  padding: .55rem 1.25rem;
-  display: flex; align-items: center; gap: .75rem;
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(160deg, #071d3d 0%, #0f2d5c 50%, #1E4B8E 100%);
+  color: white; padding: 3rem 2rem 0; position: relative; overflow: hidden;
 }
-.city-logo { width: 28px; height: 28px; flex-shrink: 0; opacity: .9; }
-.site-header-text { font-size: .65rem; font-family: var(--font-mono); letter-spacing: .05em; opacity: .8; }
+.hero-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='40' cy='40' r='2'/%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-snowflake {
+  position: absolute; opacity: .05; right: -60px; top: -60px;
+  width: 380px; height: 380px; pointer-events: none;
+}
+.hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+.hero-eyebrow {
+  font-family: var(--font-mono); font-size: .62rem;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(255,255,255,.42); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: .6rem;
+}
+.hero-eyebrow-line { width: 28px; height: 1px; background: rgba(255,255,255,.25); display: inline-block; }
 
-/* ── Sticky pool bar ── */
+.hero-h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900; line-height: 1.08;
+  letter-spacing: -.025em; margin-bottom: .85rem; color: white;
+}
+.hero-h1 em { font-style: italic; color: #93C5FD; }
+.hero-lead {
+  font-size: clamp(.88rem, 1.8vw, 1rem);
+  color: rgba(255,255,255,.72); line-height: 1.7;
+  max-width: 580px; margin-bottom: 1.75rem; font-weight: 300;
+}
+.hero-lead strong { color: white; font-weight: 600; }
+
+/* ── Mode toggle ── */
+.mode-toggle-wrap {
+  margin-bottom: 2rem;
+}
+.mode-toggle-label {
+  font-family: var(--font-mono); font-size: .62rem;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: rgba(255,255,255,.45); margin-bottom: .6rem;
+}
+.mode-toggle {
+  display: inline-flex; background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 99px; padding: 3px; gap: 0;
+}
+.mode-btn {
+  font-family: var(--font-sans); font-size: .8rem; font-weight: 600;
+  padding: .5rem 1.25rem; border-radius: 99px; border: none;
+  cursor: pointer; transition: all .2s; color: rgba(255,255,255,.6);
+  background: transparent; letter-spacing: .01em;
+}
+.mode-btn.active {
+  background: white; color: var(--city-blue);
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+.mode-btn:not(.active):hover { color: rgba(255,255,255,.9); }
+.mode-description {
+  margin-top: .55rem; font-size: .72rem;
+  color: rgba(255,255,255,.45); font-family: var(--font-mono);
+  line-height: 1.5;
+}
+
+.hero-links {
+  display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.hero-link-primary {
+  background: white; color: var(--city-blue);
+  font-weight: 700; font-size: .85rem; padding: .6rem 1.3rem;
+  border-radius: 99px; text-decoration: none;
+  display: inline-flex; align-items: center; gap: .35rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2); transition: transform .15s, box-shadow .15s;
+}
+.hero-link-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+.hero-link-secondary {
+  color: rgba(255,255,255,.58); font-size: .78rem;
+  text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.22);
+  padding-bottom: .05rem; transition: color .15s;
+}
+.hero-link-secondary:hover { color: rgba(255,255,255,.85); }
+
+.hero-stats {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+.hero-stat {
+  padding: .9rem 1rem;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.hero-stat:last-child { border-right: none; }
+.hero-stat-label {
+  font-family: var(--font-mono); font-size: .52rem;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: rgba(255,255,255,.32); margin-bottom: .25rem;
+}
+.hero-stat-val {
+  font-family: var(--font-mono); font-size: 1.5rem;
+  font-weight: 500; letter-spacing: -.02em;
+}
+.hero-stat-note { font-size: .62rem; color: rgba(255,255,255,.35); margin-top: .15rem; line-height: 1.4; }
+
+/* ── Explainer strip ── */
+.explainer {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr 1fr;
+}
+.explainer-item {
+  padding: .9rem 1.25rem; display: flex; gap: .7rem;
+  border-right: 1px solid var(--border);
+}
+.explainer-item:last-child { border-right: none; }
+.explainer-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: .05rem; }
+.explainer-h { font-size: .75rem; font-weight: 600; color: var(--text); margin-bottom: .2rem; }
+.explainer-p { font-size: .69rem; color: var(--text2); line-height: 1.55; }
+.explainer-p a { color: var(--city-blue); text-decoration: none; border-bottom: 1px solid var(--blue-light); }
+.explainer-p a:hover { border-color: var(--city-blue); }
+
+/* ── Pool bar ── */
 .pool-bar-sticky {
-  background: var(--white);
-  border-bottom: 2px solid var(--city-blue);
+  background: var(--white); border-bottom: 2px solid var(--city-blue);
   padding: .85rem 1.25rem .7rem;
   position: sticky; top: 0; z-index: 100;
   box-shadow: 0 2px 10px rgba(30,75,142,.1);
@@ -67,82 +176,71 @@ body { font-family: var(--font-sans); background: var(--cream); color: var(--tex
 .pool-top {
   display: flex; align-items: baseline;
   justify-content: space-between; gap: 1rem;
-  margin-bottom: .5rem;
-  flex-wrap: wrap;
+  margin-bottom: .5rem; flex-wrap: wrap;
 }
 .pool-title {
-  font-family: var(--font-serif);
-  font-size: clamp(1rem, 2.5vw, 1.3rem);
-  font-weight: 600; color: var(--city-blue);
-  line-height: 1.2;
+  font-family: var(--font-serif); font-size: clamp(.95rem, 2.5vw, 1.25rem);
+  font-weight: 600; color: var(--city-blue); line-height: 1.2;
 }
-.pool-title span { font-size: .68rem; font-family: var(--font-mono); font-weight: 400; color: var(--text3); display: block; margin-top: .15rem; }
+.pool-title span {
+  font-size: .65rem; font-family: var(--font-mono); font-weight: 400;
+  color: var(--text3); display: block; margin-top: .15rem;
+}
 .pool-remaining-wrap { text-align: right; flex-shrink: 0; }
 .pool-remaining-label { font-size: .6rem; font-family: var(--font-mono); color: var(--text3); text-transform: uppercase; letter-spacing: .07em; }
 .pool-remaining { font-family: var(--font-mono); font-size: clamp(1.2rem, 3vw, 1.8rem); font-weight: 500; color: var(--city-blue); letter-spacing: -.02em; transition: color .3s; }
 .pool-remaining.over  { color: var(--red); }
 .pool-remaining.close { color: var(--amber); }
-
 .pool-track { height: 8px; background: var(--cream2); border-radius: 99px; border: 1px solid var(--border); overflow: hidden; }
 .pool-fill   { height: 100%; border-radius: 99px; background: var(--city-blue); transition: width .12s, background .3s; }
-.pool-fill.over { background: var(--red); }
-.pool-fill.close { background: var(--amber); }
+.pool-fill.over   { background: var(--red); }
+.pool-fill.close  { background: var(--amber); }
 .pool-ticks { display: flex; justify-content: space-between; margin-top: .25rem; font-family: var(--font-mono); font-size: .58rem; color: var(--text3); }
 
-/* ── Page layout: left sidebar + main content ── */
-.page { display: flex; gap: 0; min-height: calc(100vh - 120px); }
+/* ── Page layout ── */
+.page { display: flex; align-items: flex-start; }
 
-/* ── Left sidebar (summary) ── */
 .left-sidebar {
-  width: 240px; flex-shrink: 0;
-  background: var(--white);
-  border-right: 1px solid var(--border);
-  padding: 1.25rem 1rem;
-  position: sticky;
-  top: 76px;
-  height: calc(100vh - 76px);
-  overflow-y: auto;
+  width: 230px; flex-shrink: 0;
+  background: var(--white); border-right: 1px solid var(--border);
+  padding: 1.1rem .9rem;
+  position: sticky; top: 76px;
+  align-self: flex-start;
+  max-height: calc(100vh - 76px); overflow-y: auto;
 }
-.sidebar-section { margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+.sidebar-section { margin-bottom: 1.1rem; padding-bottom: 1.1rem; border-bottom: 1px solid var(--border); }
 .sidebar-section:last-child { border-bottom: none; margin-bottom: 0; }
-.sidebar-label { font-size: .6rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--text3); margin-bottom: .6rem; }
+.sidebar-label { font-size: .58rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--text3); margin-bottom: .55rem; }
 
-.donut-wrap { display: flex; justify-content: center; margin-bottom: .75rem; }
-.donut { width: 90px; height: 90px; border-radius: 50%; background: var(--cream2); position: relative; }
-.donut::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:54px; height:54px; background:var(--white); border-radius:50%; }
+.donut-wrap { display: flex; justify-content: center; margin-bottom: .7rem; }
+.donut { width: 86px; height: 86px; border-radius: 50%; background: var(--cream2); position: relative; }
+.donut::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:52px; height:52px; background:var(--white); border-radius:50%; }
 
-.legend { display: flex; flex-direction: column; gap: .3rem; }
+.legend { display: flex; flex-direction: column; gap: .28rem; }
 .legend-row { display: flex; align-items: center; gap: .4rem; }
 .legend-pip { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
-.legend-label { font-size: .7rem; color: var(--text2); flex: 1; }
-.legend-pct { font-family: var(--font-mono); font-size: .65rem; color: var(--text3); }
+.legend-label { font-size: .68rem; color: var(--text2); flex: 1; }
+.legend-pct { font-family: var(--font-mono); font-size: .63rem; color: var(--text3); }
 
-.stat-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .35rem; }
+.stat-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .32rem; }
 .stat-row:last-child { margin-bottom: 0; }
-.stat-l { font-size: .72rem; color: var(--text2); }
-.stat-v { font-family: var(--font-mono); font-size: .7rem; color: var(--text); font-weight: 500; }
+.stat-l { font-size: .7rem; color: var(--text2); }
+.stat-v { font-family: var(--font-mono); font-size: .68rem; color: var(--text); font-weight: 500; }
 
-.hint-box {
-  background: var(--blue-xlight); border: 1px solid var(--blue-light);
-  border-radius: var(--r); padding: .65rem .75rem;
-}
-.hint-box p { font-size: .7rem; color: var(--text2); line-height: 1.6; }
-.hint-box p + p { margin-top: .4rem; }
+.hint-box { background: var(--blue-xlight); border: 1px solid var(--blue-light); border-radius: var(--r); padding: .6rem .7rem; }
+.hint-box p { font-size: .68rem; color: var(--text2); line-height: 1.6; }
+.hint-box p + p { margin-top: .35rem; }
 .kbd {
-  display: inline-flex; align-items: center; justify-content: center;
+  display: inline-flex; align-items: center;
   background: var(--white); border: 1px solid var(--border2);
   border-bottom: 2px solid var(--stone); border-radius: 3px;
-  font-family: var(--font-mono); font-size: .6rem;
-  padding: .05rem .3rem; color: var(--text); white-space: nowrap;
+  font-family: var(--font-mono); font-size: .58rem;
+  padding: .05rem .28rem; color: var(--text); white-space: nowrap;
 }
 
-/* ── Main sliders area ── */
-.main-content {
-  flex: 1; min-width: 320px;
-  padding: 1.25rem 1.25rem 8rem;
-}
+.main-content { flex: 1; min-width: 0; padding: 1.25rem 1.25rem 8rem; }
 
-/* Phase badge */
+/* ── Phase badge ── */
 .phase-badge {
   display: inline-flex; align-items: center; gap: .4rem;
   padding: .2rem .6rem; border-radius: 99px; font-size: .62rem;
@@ -152,19 +250,17 @@ body { font-family: var(--font-sans); background: var(--cream); color: var(--tex
 .phase-badge.input  { background: var(--blue-xlight); border-color: var(--blue-light); color: var(--city-blue); }
 .phase-badge.reveal { background: var(--green-bg); border-color: #A8DFC7; color: var(--green); }
 .phase-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.phase-badge.input .phase-dot { background: var(--city-blue); animation: pulse 1.5s infinite; }
+.phase-badge.input .phase-dot  { background: var(--city-blue); animation: pulse 1.5s infinite; }
 .phase-badge.reveal .phase-dot { background: var(--green); }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
 
-/* Scale ruler */
+/* ── Scale ruler + bar legend ── */
 .scale-ruler {
   display: flex; justify-content: space-between;
   font-family: var(--font-mono); font-size: .58rem; color: var(--text3);
   padding-bottom: .3rem; margin-bottom: .2rem;
   border-bottom: 1px dashed var(--border);
 }
-
-/* Bar legend */
 .bar-legend {
   display: flex; gap: 1rem; margin-bottom: .85rem;
   font-size: .62rem; font-family: var(--font-mono); color: var(--text3);
@@ -179,90 +275,74 @@ body { font-family: var(--font-sans); background: var(--cream); color: var(--tex
 .cluster { margin-bottom: 1.75rem; }
 .cluster-header {
   display: flex; align-items: center; gap: .5rem;
-  padding: .4rem 0 .4rem;
-  border-bottom: 2px solid var(--border2);
-  margin-bottom: .3rem;
+  padding: .4rem 0; border-bottom: 2px solid var(--border2); margin-bottom: .3rem;
 }
 .cluster-pip { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
 .cluster-name { font-size: .65rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--text2); font-weight: 500; }
 .cluster-total { margin-left: auto; font-size: .65rem; font-family: var(--font-mono); color: var(--text3); }
 .cluster-total b { color: var(--text); font-weight: 500; }
 
-/* ── Dept row — stacked layout ── */
-.dept-row {
-  padding: .55rem 0 .6rem;
-  border-bottom: 1px solid var(--cream3);
-}
+/* ── Dept row ── */
+.dept-row { padding: .55rem 0 .6rem; border-bottom: 1px solid var(--cream3); }
 .dept-row:last-child { border-bottom: none; }
-
-/* Name + controls on same line */
-.dept-top {
-  display: flex; align-items: baseline;
-  justify-content: space-between;
-  gap: .75rem; margin-bottom: .35rem;
-}
-.dept-name {
-  font-size: .8rem; font-weight: 500; color: var(--text);
-  line-height: 1.3; flex: 1; min-width: 0;
-}
-.dept-name small {
-  display: block; font-size: .6rem; color: var(--text3);
-  font-family: var(--font-mono); margin-top: .1rem; font-weight: 400;
-}
-.dept-controls {
-  display: flex; align-items: center; gap: .5rem; flex-shrink: 0;
-}
+.dept-top { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; margin-bottom: .35rem; }
+.dept-name { font-size: .8rem; font-weight: 500; color: var(--text); line-height: 1.3; flex: 1; min-width: 0; }
+.dept-name small { display: block; font-size: .6rem; color: var(--text3); font-family: var(--font-mono); margin-top: .1rem; font-weight: 400; }
+.dept-controls { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; }
 .dept-text-input {
-  width: 88px;
-  font-family: var(--font-mono); font-size: .75rem; font-weight: 500;
-  color: var(--text); background: var(--white);
-  border: 1px solid var(--border2); border-radius: var(--r);
-  padding: .22rem .4rem; text-align: right;
+  width: 88px; font-family: var(--font-mono); font-size: .75rem; font-weight: 500;
+  color: var(--text); background: var(--white); border: 1px solid var(--border2);
+  border-radius: var(--r); padding: .22rem .4rem; text-align: right;
   transition: border-color .15s, box-shadow .15s;
 }
 .dept-text-input:focus { outline: none; border-color: var(--city-blue); box-shadow: 0 0 0 2px var(--blue-light); }
 .dept-pct { font-family: var(--font-mono); font-size: .7rem; color: var(--text3); white-space: nowrap; min-width: 38px; text-align: right; }
 
-/* Full-width bar below name */
-.dept-bar-row { position: relative; height: 28px; }
 
-.bar-track {
-  position: absolute; inset: 6px 0;
-  background: var(--cream2);
-  border: 1px solid var(--border);
-  border-radius: 4px;
+/* ── Employee visualization ── */
+.dept-emp-viz {
+  display: flex; align-items: center; gap: .4rem;
+  margin-top: .25rem; flex-wrap: wrap;
 }
-.bar-tick {
-  position: absolute; top: 0; bottom: 0;
-  width: 1px; background: var(--border2); z-index: 1;
+.emp-dots {
+  display: flex; flex-wrap: wrap; gap: 2px; max-width: 180px;
 }
-.bar-actual {
-  position: absolute; top: 6px; bottom: 6px; left: 0;
-  border-radius: 3px; background: var(--stone);
-  opacity: 0; transition: opacity .5s; z-index: 2;
+.emp-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--stone); opacity: .5; flex-shrink: 0;
 }
+.emp-dot.sworn { background: var(--city-blue); opacity: .8; }
+.emp-label {
+  font-family: var(--font-mono); font-size: .58rem; color: var(--text3);
+  white-space: nowrap;
+}
+.emp-legend {
+  display: flex; gap: .6rem; margin-bottom: .4rem;
+  font-size: .58rem; font-family: var(--font-mono); color: var(--text3);
+  padding-left: 0;
+}
+.emp-legend span { display: flex; align-items: center; gap: .25rem; }
+.emp-legend .ed { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Bar ── */
+.dept-bar-row { position: relative; height: 28px; }
+.bar-track { position: absolute; inset: 6px 0; background: var(--cream2); border: 1px solid var(--border); border-radius: 4px; }
+.bar-tick { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--border2); z-index: 1; }
+.bar-actual { position: absolute; top: 6px; bottom: 6px; left: 0; border-radius: 3px; background: var(--stone); opacity: 0; transition: opacity .5s; z-index: 2; }
 .bar-actual.visible { opacity: .45; }
-.bar-yours {
-  position: absolute; top: 6px; bottom: 6px; left: 0;
-  border-radius: 3px; z-index: 3; transition: width .06s; min-width: 0;
-}
+.bar-yours { position: absolute; top: 6px; bottom: 6px; left: 0; border-radius: 3px; z-index: 3; transition: width .06s; min-width: 0; }
 .bar-thumb {
-  position: absolute; top: 2px; bottom: 2px;
-  width: 5px; border-radius: 3px;
-  background: var(--stone3);
-  z-index: 5; pointer-events: none;
-  transition: left .06s;
-  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  position: absolute; top: 2px; bottom: 2px; width: 5px; border-radius: 3px;
+  background: var(--stone3); z-index: 5; pointer-events: none;
+  transition: left .06s; box-shadow: 0 1px 3px rgba(0,0,0,.2);
 }
 .bar-thumb.at-zero {
-  width: 24px; left: 0 !important;
-  background: var(--city-blue);
+  width: 24px; left: 0 !important; background: var(--city-blue);
   border-radius: 4px; top: 4px; bottom: 4px;
   display: flex; align-items: center; justify-content: center;
 }
 .bar-thumb.at-zero::after {
-  content: 'drag';
-  font-family: var(--font-mono); font-size: .48rem;
+  content: 'drag'; font-family: var(--font-mono); font-size: .48rem;
   color: white; letter-spacing: .03em; white-space: nowrap;
 }
 input[type=range] {
@@ -271,7 +351,7 @@ input[type=range] {
   -webkit-appearance: none; appearance: none;
 }
 
-/* ── CTA bar ── */
+/* ── CTA ── */
 .cta-bar {
   position: fixed; bottom: 0; left: 0; right: 0;
   background: linear-gradient(to top, var(--cream) 60%, transparent);
@@ -288,93 +368,167 @@ input[type=range] {
 .cta-primary:hover { background: var(--blue-mid); transform: translateY(-1px); }
 .cta-ghost { background: var(--white); color: var(--text2); border: 1px solid var(--border2); }
 .cta-ghost:hover { background: var(--cream2); }
-.cta-reveal { background: var(--green); color: white; box-shadow: 0 2px 8px rgba(26,107,69,.25); }
+.cta-reveal { background: var(--green); color: white; }
 .cta-reveal:hover { background: #145937; transform: translateY(-1px); }
+
+
+/* ── Shareable results card ── */
+.share-card-wrap {
+  margin-bottom: 1.75rem;
+}
+.share-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .75rem; flex-wrap: wrap; gap: .5rem;
+}
+.share-card-header h3 {
+  font-family: var(--font-serif); font-size: 1rem; font-weight: 600; color: var(--city-blue);
+}
+.share-card-header p { font-size: .7rem; color: var(--text3); font-family: var(--font-mono); }
+.screenshot-btn {
+  font-family: var(--font-mono); font-size: .65rem;
+  padding: .3rem .7rem; border-radius: var(--r);
+  border: 1px solid var(--city-blue); background: var(--blue-xlight);
+  color: var(--city-blue); cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; gap: .35rem;
+}
+.screenshot-btn:hover { background: var(--city-blue); color: white; }
+
+.share-card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+  font-family: var(--font-sans);
+}
+.sc-top {
+  background: linear-gradient(135deg, #071d3d, #1E4B8E);
+  padding: 1.1rem 1.25rem; color: white;
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;
+  flex-wrap: wrap;
+}
+.sc-top-left h4 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem; font-weight: 900; margin-bottom: .15rem;
+}
+.sc-top-left p { font-size: .62rem; opacity: .6; font-family: var(--font-mono); letter-spacing: .05em; }
+.sc-top-right { text-align: right; flex-shrink: 0; }
+.sc-top-right .sc-big { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 500; letter-spacing: -.02em; }
+.sc-top-right .sc-small { font-size: .58rem; opacity: .55; font-family: var(--font-mono); margin-top: .1rem; }
+
+.sc-body { padding: 1rem 1.25rem; display: grid; grid-template-columns: 120px 1fr; gap: .85rem; align-items: start; }
+@media (max-width: 520px) {
+  .sc-body { grid-template-columns: 1fr; }
+  .sc-pie-wrap { flex-direction: row; align-items: center; gap: .85rem; }
+  .sc-pie { width: 80px; height: 80px; flex-shrink: 0; }
+  .sc-pie::after { width: 48px; height: 48px; }
+  .sc-bar-row { grid-template-columns: 80px 1fr 40px; }
+  .sc-bar-name { font-size: .58rem; }
+}
+.sc-pie-wrap { display: flex; flex-direction: column; align-items: center; gap: .5rem; }
+.sc-pie { width: 120px; height: 120px; border-radius: 50%; position: relative; }
+.sc-pie::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:72px; height:72px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.sc-pie-label { font-family: var(--font-mono); font-size: .58rem; color: var(--text3); text-align: center; line-height: 1.4; }
+
+.sc-bars { display: flex; flex-direction: column; gap: .28rem; }
+.sc-bar-row { display: grid; grid-template-columns: 95px 1fr 46px; align-items: center; gap: .4rem; }
+.sc-bars { max-height: 320px; overflow-y: auto; }
+.sc-bar-name { font-size: .62rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-bar-track { position: relative; height: 14px; background: var(--cream2); border-radius: 2px; overflow: hidden; }
+.sc-bar-actual { position: absolute; inset: 0; height: 100%; border-radius: 2px; opacity: .3; }
+.sc-bar-yours  { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 2px; }
+.sc-bar-delta { font-family: var(--font-mono); font-size: .58rem; text-align: right; font-weight: 500; white-space: nowrap; }
+.sc-bar-delta.pos { color: var(--green); }
+.sc-bar-delta.neg { color: var(--red); }
+.sc-bar-delta.zero { color: var(--text3); }
+
+.sc-footer {
+  border-top: 1px solid var(--border); padding: .65rem 1.25rem;
+  display: flex; justify-content: flex-start; align-items: center;
+  background: var(--cream); flex-wrap: wrap; gap: .4rem 1rem;
+}
+.sc-footer-brand { margin-left: auto; }
+.sc-footer-stat { font-family: var(--font-mono); font-size: .6rem; color: var(--text2); }
+.sc-footer-stat b { color: var(--text); }
+.sc-footer-brand { font-family: var(--font-mono); font-size: .55rem; color: var(--text3); }
 
 /* ── Results ── */
 .reveal-panel { display: none; padding: 0 1.5rem 8rem; }
 .reveal-panel.open { display: block; }
-.reveal-header {
-  padding-top: 1.75rem; margin-bottom: 1.25rem;
-  border-top: 2px solid var(--city-blue);
-  display: flex; align-items: flex-start; gap: .85rem; flex-wrap: wrap;
-}
+.reveal-header { padding-top: 1.75rem; margin-bottom: 1.25rem; border-top: 2px solid var(--city-blue); display: flex; align-items: flex-start; gap: .85rem; flex-wrap: wrap; }
 .reveal-header h2 { font-family: var(--font-serif); font-size: clamp(1.2rem,3vw,1.75rem); font-weight: 600; color: var(--city-blue); }
-
 .score-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .6rem; margin-bottom: 1.5rem; }
 .score-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: .8rem; }
 .sc-label { font-size: .58rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--text3); margin-bottom: .25rem; }
 .sc-val { font-family: var(--font-mono); font-size: 1.2rem; font-weight: 500; }
 .sc-val.good { color: var(--green); } .sc-val.ok { color: var(--amber); } .sc-val.bad { color: var(--red); }
-
 .compare-section { margin-bottom: 1.5rem; }
 .compare-section h3 { font-size: .62rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--text3); margin-bottom: .55rem; padding-bottom: .3rem; border-bottom: 1.5px solid var(--border2); }
-
-.cr-row {
-  display: grid; grid-template-columns: 1fr 80px 80px 75px;
-  align-items: center; gap: .5rem;
-  padding: .5rem 0; border-bottom: 1px solid var(--cream3);
-}
+.cr-row { display: grid; grid-template-columns: 1fr 80px 80px 75px; align-items: center; gap: .5rem; padding: .5rem 0; border-bottom: 1px solid var(--cream3); }
 .cr-row:last-child { border-bottom: none; }
-.cr-name-wrap { min-width: 0; }
+.cr-name-bar { grid-column: 1 / -1; }
 .cr-name { font-size: .77rem; color: var(--text); font-weight: 500; display: block; }
-.cr-bar-wrap { position: relative; height: 22px; grid-column: 1; margin-top: .25rem; }
+.cr-bar-wrap { position: relative; height: 22px; margin-top: .25rem; }
 .cr-bar-a { position: absolute; bottom: 1px; left: 0; height: 5px; border-radius: 2px; background: var(--stone); opacity: .5; }
 .cr-bar-y { position: absolute; top: 1px; left: 0; height: 9px; border-radius: 2px; }
 .cr-av { font-family: var(--font-mono); font-size: .64rem; color: var(--text3); text-align: right; }
 .cr-yv { font-family: var(--font-mono); font-size: .64rem; color: var(--text); text-align: right; font-weight: 500; }
 .cr-delta { font-family: var(--font-mono); font-size: .68rem; text-align: right; font-weight: 500; }
 .cr-delta.pos { color: var(--green); } .cr-delta.neg { color: var(--red); } .cr-delta.zero { color: var(--text3); }
-
-/* Make cr-row 2-row: name+bars on full width, then numbers */
-.cr-row { grid-template-columns: 1fr 80px 80px 75px; }
-.cr-name-bar { grid-column: 1 / -1; }
-
-.narrative {
-  background: var(--blue-xlight); border: 1px solid var(--blue-light);
-  border-left: 3px solid var(--city-blue);
-  border-radius: 0 var(--r) var(--r) 0;
-  padding: .9rem 1.1rem; margin-top: 1.25rem;
-}
+.narrative { background: var(--blue-xlight); border: 1px solid var(--blue-light); border-left: 3px solid var(--city-blue); border-radius: 0 var(--r) var(--r) 0; padding: .9rem 1.1rem; margin-top: 1.25rem; }
 .narrative h3 { font-family: var(--font-serif); font-size: .95rem; font-weight: 600; color: var(--city-blue); margin-bottom: .4rem; }
 .narrative p { font-size: .8rem; color: var(--text2); line-height: 1.65; margin-bottom: .35rem; }
 .narrative p:last-child { margin-bottom: 0; }
 
 /* ── Mobile ── */
+.mobile-summary { display: none; }
 @media (max-width: 860px) {
-  .left-sidebar { display: none; }
   .page { flex-direction: column; }
   .main-content { padding: 1rem 1rem 8rem; }
+  .left-sidebar {
+    width: 100%; position: static; max-height: none;
+    border-right: none; border-bottom: 1px solid var(--border);
+    padding: .85rem 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: start;
+  }
+  .left-sidebar .sidebar-section {
+    padding: .5rem .75rem;
+    margin-bottom: 0;
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+  }
+  .left-sidebar .sidebar-section:last-child { border-right: none; }
+  /* Hide donut and controls on mobile — keep stats and legend only */
+  .left-sidebar .donut-wrap { display: none; }
+  .left-sidebar .hint-box { display: none; }
+  .left-sidebar .sidebar-section:last-child { display: none; }
   .pool-bar-sticky { padding: .7rem 1rem .6rem; }
   .score-grid { grid-template-columns: repeat(2,1fr); }
   .cr-row { grid-template-columns: 1fr 68px 68px 62px; }
   .dept-text-input { width: 76px; }
-
-  /* Mobile: show mini summary above sliders */
+  .hero { padding: 2rem 1.1rem 0; }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .hero-stats > :last-child { grid-column: 1 / -1; }
+  .explainer { grid-template-columns: 1fr; }
+  .explainer-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .explainer-item:last-child { border-bottom: none; }
   .mobile-summary {
     display: flex; gap: .5rem; flex-wrap: wrap;
     background: var(--white); border: 1px solid var(--border);
-    border-radius: var(--r); padding: .6rem .75rem;
-    margin-bottom: .85rem;
+    border-radius: var(--r); padding: .6rem .75rem; margin-bottom: .85rem;
   }
   .mobile-summary-item { font-size: .68rem; font-family: var(--font-mono); color: var(--text2); }
   .mobile-summary-item b { color: var(--text); }
 }
-@media (min-width: 701px) { .mobile-summary { display: none; } }
-
-@media (max-width: 400px) {
-  .dept-text-input { width: 68px; font-size: .68rem; }
-  .dept-pct { min-width: 32px; font-size: .62rem; }
-}
-
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 </style>
 </head>
 <body>
 
 <!-- HERO -->
-<section style="background:#0f2d5c;color:white;padding:2.5rem 2rem 0;position:relative;overflow:hidden">
-  <svg style="position:absolute;opacity:.055;right:-50px;top:-50px;width:340px;height:340px;pointer-events:none" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+<section class="hero">
+  <div class="hero-bg"></div>
+  <svg class="hero-snowflake" viewBox="0 0 200 200" fill="none" aria-hidden="true">
     <g fill="white">
       <rect x="93" y="5" width="14" height="190" rx="6"/>
       <rect x="5" y="93" width="190" height="14" rx="6"/>
@@ -387,71 +541,90 @@ input[type=range] {
       <circle cx="36" cy="164" r="7"/><circle cx="164" cy="164" r="7"/>
     </g>
   </svg>
-  <div style="max-width:860px;margin:0 auto;position:relative;z-index:1">
-    <div style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.9rem;display:flex;align-items:center;gap:.55rem">
-      <span style="width:24px;height:1px;background:rgba(255,255,255,.25);display:inline-block"></span>
+
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="hero-eyebrow-line"></span>
       City of Bloomington, Indiana &nbsp;&bull;&nbsp; 2026 Budget Season
     </div>
-    <h1 style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(2rem,5vw,2.9rem);font-weight:900;line-height:1.08;letter-spacing:-.025em;margin-bottom:.8rem;color:white">
-      Bloomington is <em style="font-style:italic;color:#93C5FD">your</em> city.<br>How would you spend it?
+
+    <h1 class="hero-h1">
+      $82 million.<br>17 departments.<br><em>You</em> decide where it goes.
     </h1>
-    <p style="font-size:clamp(.88rem,1.8vw,.98rem);color:rgba(255,255,255,.72);line-height:1.7;max-width:560px;margin-bottom:1.4rem;font-weight:300">
-      Every year the city divides <strong style="color:white;font-weight:600">$82.3 million</strong> across 17 departments &mdash; police, parks, housing, roads, and more. Set your own priorities first. Then see how Mayor Thomson and the Council actually spent it.
+
+    <p class="hero-lead">
+      Every fall, Bloomington's mayor proposes a budget and the City Council votes on it. Most residents never see it. This year, <strong>we're asking you to try first</strong> — allocate the city's $82.3 million general fund before we show you how the council actually spent it. See how your priorities compare.
     </p>
-    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:2rem">
-      <a href="#sliders-panel" onclick="document.getElementById('sliders-panel').scrollIntoView({behavior:'smooth'});return false"
-        style="background:white;color:#1E4B8E;font-weight:700;font-size:.85rem;padding:.6rem 1.3rem;border-radius:99px;text-decoration:none;display:inline-flex;align-items:center;gap:.35rem;box-shadow:0 4px 16px rgba(0,0,0,.2)">
+
+    <!-- Mode toggle -->
+    <div class="mode-toggle-wrap">
+      <div class="mode-toggle-label">How do you want to start?</div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="btn-blank" onclick="setMode('blank')">
+          Start from zero
+        </button>
+        <button class="mode-btn" id="btn-actual" onclick="setMode('actual')">
+          Start from actual budget
+        </button>
+      </div>
+      <div class="mode-description" id="mode-desc">
+        All sliders start at $0 &mdash; you build the budget from scratch. Most revealing.
+      </div>
+    </div>
+
+    <div class="hero-links">
+      <a href="#sliders-panel" onclick="document.getElementById('sliders-panel').scrollIntoView({behavior:'smooth'});return false" class="hero-link-primary">
         &#x1F4CA; Start allocating &darr;
       </a>
-      <a href="https://bsquarebulletin.com" target="_blank" rel="noopener"
-        style="color:rgba(255,255,255,.6);font-size:.78rem;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.25);padding-bottom:.05rem">
+      <a href="https://bsquarebulletin.com" target="_blank" rel="noopener" class="hero-link-secondary">
         B Square Bulletin budget coverage &rarr;
       </a>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,255,255,.1)">
-      <div style="padding:.85rem 1rem;border-right:1px solid rgba(255,255,255,.08)">
-        <div style="font-family:var(--font-mono);font-size:.52rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.35);margin-bottom:.2rem">Total pool</div>
-        <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:500;letter-spacing:-.02em">$82.3M</div>
-        <div style="font-size:.62rem;color:rgba(255,255,255,.38);margin-top:.15rem;line-height:1.4">General Fund + LIT, FY 2026</div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-label">Total pool</div>
+        <div class="hero-stat-val">$82.3M</div>
+        <div class="hero-stat-note">General Fund + LIT, FY 2026</div>
       </div>
-      <div style="padding:.85rem 1rem;border-right:1px solid rgba(255,255,255,.08)">
-        <div style="font-family:var(--font-mono);font-size:.52rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.35);margin-bottom:.2rem">Departments</div>
-        <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:500;letter-spacing:-.02em">17</div>
-        <div style="font-size:.62rem;color:rgba(255,255,255,.38);margin-top:.15rem;line-height:1.4">From Police to the City Clerk</div>
+      <div class="hero-stat">
+        <div class="hero-stat-label">Departments</div>
+        <div class="hero-stat-val">17</div>
+        <div class="hero-stat-note">From Police to the City Clerk</div>
       </div>
-      <div style="padding:.85rem 1rem">
-        <div style="font-family:var(--font-mono);font-size:.52rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.35);margin-bottom:.2rem">Adopted by Council</div>
-        <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:500;letter-spacing:-.02em">Oct '25</div>
-        <div style="font-size:.62rem;color:rgba(255,255,255,.38);margin-top:.15rem;line-height:1.4">Passed 7&ndash;2, in effect FY 2026</div>
+      <div class="hero-stat">
+        <div class="hero-stat-label">Adopted by Council</div>
+        <div class="hero-stat-val">Oct &lsquo;25</div>
+        <div class="hero-stat-note">Passed 7&ndash;2, in effect FY 2026</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- EXPLAINER STRIP -->
-<div style="background:var(--white);border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr">
-  <div style="padding:.9rem 1.25rem;display:flex;gap:.7rem;border-right:1px solid var(--border)">
-    <span style="font-size:1.3rem;flex-shrink:0;margin-top:.05rem">&#x1F6AB;</span>
+<!-- EXPLAINER -->
+<div class="explainer">
+  <div class="explainer-item">
+    <span class="explainer-icon">&#x1F6AB;</span>
     <div>
-      <div style="font-size:.75rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Why utilities and transit aren't here</div>
-      <p style="font-size:.69rem;color:var(--text2);line-height:1.55">Bloomington Utilities ($57.6M) and Bloomington Transit ($19M) are <strong>self-funded enterprise operations</strong> &mdash; paid by ratepayers and federal grants, not general taxes. They never touch this budget.</p>
+      <div class="explainer-h">Why utilities and transit aren&rsquo;t here</div>
+      <p class="explainer-p">Bloomington Utilities ($57.6M) and Bloomington Transit ($19M) are <strong>self-funded enterprise operations</strong> &mdash; paid by water/sewer ratepayers and federal transit grants, not general taxes. They never compete for this pool of money.</p>
     </div>
   </div>
-  <div style="padding:.9rem 1.25rem;display:flex;gap:.7rem">
-    <span style="font-size:1.3rem;flex-shrink:0;margin-top:.05rem">&#x1F4F0;</span>
+  <div class="explainer-item">
+    <span class="explainer-icon">&#x1F4F0;</span>
     <div>
-      <div style="font-size:.75rem;font-weight:600;color:var(--text);margin-bottom:.2rem">Want to go deeper?</div>
-      <p style="font-size:.69rem;color:var(--text2);line-height:1.55">The <a href="https://bsquarebulletin.com" target="_blank" rel="noopener" style="color:var(--city-blue);text-decoration:none;border-bottom:1px solid var(--blue-light)">B Square Bulletin</a> covered every twist of Bloomington's 2026 budget season. Full budget book at <a href="https://bloomington.in.gov/city/budget" target="_blank" rel="noopener" style="color:var(--city-blue);text-decoration:none;border-bottom:1px solid var(--blue-light)">bloomington.in.gov/city/budget</a>.</p>
+      <div class="explainer-h">Want the full story?</div>
+      <p class="explainer-p">The <a href="https://bsquarebulletin.com" target="_blank" rel="noopener">B Square Bulletin</a> covered every twist of Bloomington&rsquo;s 2026 budget season &mdash; from the mayor&rsquo;s August proposal to the October council vote. Full 380-page budget book at <a href="https://bloomington.in.gov/city/budget" target="_blank" rel="noopener">bloomington.in.gov/city/budget</a>.</p>
     </div>
   </div>
 </div>
 
-<!-- ======== STICKY POOL BAR ======== -->
+<!-- POOL BAR -->
 <div class="pool-bar-sticky">
   <div class="pool-top">
     <div class="pool-title">
       Your budget &mdash; $82,350,000 to allocate
-      <span>DRAG SLIDERS &bull; USE ARROW KEYS &bull; TYPE AMOUNTS LIKE &ldquo;5m&rdquo; OR &ldquo;500k&rdquo;</span>
+      <span>DRAG SLIDERS &bull; ARROW KEYS FOR FINE CONTROL &bull; TYPE &ldquo;5m&rdquo; OR &ldquo;500k&rdquo; IN THE $ FIELD</span>
     </div>
     <div class="pool-remaining-wrap">
       <div class="pool-remaining-label">Remaining</div>
@@ -463,20 +636,18 @@ input[type=range] {
 </div>
 
 <div class="page">
-
-  <!-- Left sidebar -->
+  <!-- Sidebar -->
   <aside class="left-sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">Your allocation</div>
       <div class="donut-wrap"><div class="donut" id="donut"></div></div>
       <div class="legend">
-        <div class="legend-row"><span class="legend-pip" style="background:var(--safety)"></span><span class="legend-label">Public Safety</span><span class="legend-pct" id="leg-safety">--</span></div>
+        <div class="legend-row"><span class="legend-pip" style="background:var(--safety)"></span><span class="legend-label">Emergency Services</span><span class="legend-pct" id="leg-safety">--</span></div>
         <div class="legend-row"><span class="legend-pip" style="background:var(--infra)"></span><span class="legend-label">Infrastructure</span><span class="legend-pct" id="leg-infra">--</span></div>
         <div class="legend-row"><span class="legend-pip" style="background:var(--human)"></span><span class="legend-label">Human Services</span><span class="legend-pct" id="leg-human">--</span></div>
         <div class="legend-row"><span class="legend-pip" style="background:var(--admin)"></span><span class="legend-label">Administration</span><span class="legend-pct" id="leg-admin">--</span></div>
       </div>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-label">Running totals</div>
       <div class="stat-row"><span class="stat-l">Allocated</span><span class="stat-v" id="stat-allocated">$0</span></div>
@@ -485,30 +656,24 @@ input[type=range] {
       <div class="stat-row"><span class="stat-l">Largest dept</span><span class="stat-v" id="stat-largest">--</span></div>
       <div class="stat-row"><span class="stat-l">Safety share</span><span class="stat-v" id="stat-safety">--</span></div>
     </div>
-
     <div class="sidebar-section">
       <div class="sidebar-label">Controls</div>
       <div class="hint-box">
         <p><strong>Drag</strong> the bar to set a value</p>
-        <p>Click bar, use <span class="kbd">&#8592;</span> <span class="kbd">&#8594;</span> for $50K steps</p>
-        <p><span class="kbd">Shift</span>+arrow = $500K jumps</p>
-        <p>Type in the <strong>$ field</strong> directly:<br>
-        <span class="kbd">5m</span> <span class="kbd">2.5m</span> <span class="kbd">500k</span></p>
+        <p>Click a bar, then use <span class="kbd">&#8592;</span> <span class="kbd">&#8594;</span> arrow keys for $50K steps</p>
+        <p><span class="kbd">Shift</span> + arrow = $500K jumps</p>
+        <p>Type directly in the <strong>$ field</strong>:<br><span class="kbd">5m</span> &nbsp;<span class="kbd">2.5m</span> &nbsp;<span class="kbd">500k</span></p>
       </div>
-      </div>
-      </div>
+    </div>
   </aside>
 
-  <!-- Main content -->
+  <!-- Main -->
   <div class="main-content">
-
-    <!-- Mobile-only summary strip -->
     <div class="mobile-summary">
       <span class="mobile-summary-item">Allocated: <b id="mob-allocated">$0</b></span>
       <span class="mobile-summary-item">Remaining: <b id="mob-remaining">$82.4M</b></span>
       <span class="mobile-summary-item">Funded: <b id="mob-funded">0/17</b></span>
     </div>
-
     <div id="sliders-panel"></div>
   </div>
 </div>
@@ -517,7 +682,7 @@ input[type=range] {
 <div class="reveal-panel" id="reveal-panel">
   <div class="reveal-header">
     <div class="phase-badge reveal"><span class="phase-dot"></span>RESULTS</div>
-    <h2>Bloomington's actual 2026 budget -- revealed</h2>
+    <h2>Bloomington&rsquo;s actual 2026 budget &mdash; revealed</h2>
   </div>
   <div class="score-grid" id="score-grid"></div>
   <div id="results-body"></div>
@@ -535,44 +700,88 @@ const SLIDER_MAX = 37400000;
 const STEP = 50000;
 
 const CLUSTERS = [
-  { id:"safety", label:"Public Safety",             hex:"#1E4B8E" },
+  { id:"safety", label:"Emergency Services",         hex:"#1E4B8E" },
   { id:"infra",  label:"Infrastructure & Services", hex:"#7A4F1E" },
   { id:"human",  label:"Human Services",            hex:"#2D6A4F" },
   { id:"admin",  label:"Administration & Finance",  hex:"#5B3D7A" },
 ];
 
 const DEPTS = [
-  { id:"police",      cluster:"safety", label:"&#x1F46E;&nbsp;Police Department",         note:"Law enforcement, investigations, community safety",    actual:23200000 },
-  { id:"fire",        cluster:"safety", label:"&#x1F692;&nbsp;Fire Department",           note:"Fire suppression, EMS, 5 stations, ISO Class 1",       actual:20400000 },
-  { id:"dispatch",    cluster:"safety", label:"&#x1F4DE;&nbsp;Dispatch / 911",            note:"Emergency communications, Monroe County",              actual:3400000  },
-  { id:"pw",          cluster:"infra",  label:"&#x1F6E3;&nbsp;Public Works",              note:"Roads, sanitation, fleet, city buildings",             actual:24900000 },
-  { id:"engineering", cluster:"infra",  label:"&#x1F3D7;&nbsp;Engineering",               note:"Infrastructure design, permits, project delivery",     actual:3800000  },
-  { id:"planning",    cluster:"infra",  label:"&#x1F5FA;&nbsp;Planning & Transportation", note:"Zoning, land use, bike/ped, comprehensive plan",       actual:3300000  },
-  { id:"its",         cluster:"infra",  label:"&#x1F4BB;&nbsp;Information Technology",    note:"City IT systems, fiber network, cybersecurity",        actual:6300000  },
-  { id:"parks",       cluster:"human",  label:"&#x1F333;&nbsp;Parks & Recreation",        note:"34 parks, pools, trails, community centers",           actual:12800000 },
-  { id:"housing",     cluster:"human",  label:"&#x1F3E0;&nbsp;Housing & Neighborhood",    note:"Affordable housing programs, code enforcement",        actual:5800000  },
-  { id:"cfrd",        cluster:"human",  label:"&#x1F91D;&nbsp;Community & Family Res.",   note:"Youth programs, social services, grants",              actual:4900000  },
-  { id:"esd",         cluster:"human",  label:"&#x1F331;&nbsp;Economic & Sustainable",    note:"Business development, sustainability programs",        actual:3500000  },
-  { id:"controller",  cluster:"admin",  label:"&#x1F4B0;&nbsp;Controller / Finance",      note:"Payroll, audit, financial reporting",                  actual:5500000  },
-  { id:"hr",          cluster:"admin",  label:"&#x1F465;&nbsp;Human Resources",           note:"Hiring, benefits, labor relations",                    actual:1700000  },
-  { id:"legal",       cluster:"admin",  label:"&#x2696;&nbsp;Legal & Risk Management",   note:"City attorney, contracts, insurance",                  actual:3400000  },
-  { id:"mayor",       cluster:"admin",  label:"&#x1F3DB;&nbsp;Office of the Mayor",       note:"Executive leadership and administration",              actual:1300000  },
-  { id:"council",     cluster:"admin",  label:"&#x1F5F3;&nbsp;Common Council",            note:"9 elected members and legislative staff",              actual:1800000  },
-  { id:"clerk",       cluster:"admin",  label:"&#x1F4DC;&nbsp;City Clerk",                note:"Public records, elections, ordinances",                actual:600000   },
+  { id:"police",      cluster:"safety", label:"&#x1F46E; Police Department",         note:"Policing, investigations, enforcement &amp; violence response",    actual:23200000, employees:156, sworn:91  },
+  { id:"fire",        cluster:"safety", label:"&#x1F692; Fire Department",           note:"Fire suppression, emergency medical services, 5 stations",         actual:20400000, employees:117, sworn:102 },
+  { id:"dispatch",    cluster:"safety", label:"&#x1F4DE; Dispatch / 911",            note:"Emergency call routing for all services, Monroe County",           actual:3400000,  employees:18,  sworn:0   },
+  { id:"pw",          cluster:"infra",  label:"&#x1F6E3; Public Works",              note:"Roads, sanitation, fleet, city buildings",                         actual:24900000, employees:180, sworn:0   },
+  { id:"engineering", cluster:"infra",  label:"&#x1F3D7; Engineering",               note:"Infrastructure design, permits, project delivery",                 actual:3800000,  employees:18,  sworn:0   },
+  { id:"planning",    cluster:"infra",  label:"&#x1F5FA; Planning & Transportation", note:"Zoning, land use, bike/ped, comprehensive plan",                   actual:3300000,  employees:18,  sworn:0   },
+  { id:"its",         cluster:"infra",  label:"&#x1F4BB; Information Technology",    note:"City IT systems, fiber network, cybersecurity",                    actual:6300000,  employees:20,  sworn:0   },
+  { id:"parks",       cluster:"human",  label:"&#x1F333; Parks & Recreation",        note:"34 parks, pools, trails, community centers — 53 FT + 450 seasonal",actual:12800000, employees:503, sworn:0   },
+  { id:"housing",     cluster:"human",  label:"&#x1F3E0; Housing & Neighborhood",    note:"Affordable housing programs, code enforcement",                    actual:5800000,  employees:25,  sworn:0   },
+  { id:"cfrd",        cluster:"human",  label:"&#x1F91D; Community & Family Res.",   note:"Youth programs, social services, community grants",                actual:4900000,  employees:30,  sworn:0   },
+  { id:"esd",         cluster:"human",  label:"&#x1F331; Economic & Sustainable",    note:"Business development, sustainability programs",                    actual:3500000,  employees:18,  sworn:0   },
+  { id:"controller",  cluster:"admin",  label:"&#x1F4B0; Controller / Finance",      note:"Payroll, audit, financial reporting",                              actual:5500000,  employees:20,  sworn:0   },
+  { id:"hr",          cluster:"admin",  label:"&#x1F465; Human Resources",           note:"Hiring, benefits, labor relations",                                actual:1700000,  employees:10,  sworn:0   },
+  { id:"legal",       cluster:"admin",  label:"&#x2696; Legal & Risk Management",    note:"City attorney, contracts, insurance",                              actual:3400000,  employees:12,  sworn:0   },
+  { id:"mayor",       cluster:"admin",  label:"&#x1F3DB; Office of the Mayor",       note:"Executive leadership and administration",                          actual:1300000,  employees:8,   sworn:0   },
+  { id:"council",     cluster:"admin",  label:"&#x1F5F3; Common Council",            note:"9 elected members and legislative staff",                          actual:1800000,  employees:17,  sworn:0   },
+  { id:"clerk",       cluster:"admin",  label:"&#x1F4DC; City Clerk",                note:"Public records, elections, ordinances",                            actual:600000,   employees:4,   sworn:0   },
 ];
 
 const state = {};
 DEPTS.forEach(d => state[d.id] = 0);
 let revealed = false;
+let startMode = 'blank'; // 'blank' or 'actual'
+
+// ── Mode toggle ────────────────────────────────────────────────
+function setMode(mode) {
+  startMode = mode;
+  document.getElementById('btn-blank').className  = 'mode-btn' + (mode==='blank' ? ' active' : '');
+  document.getElementById('btn-actual').className = 'mode-btn' + (mode==='actual'? ' active' : '');
+  const desc = document.getElementById('mode-desc');
+  if (mode === 'blank') {
+    desc.textContent = 'All sliders start at $0. You\'re not anchored by the city\'s choices, so your allocation reflects what you actually value \u2014 not what you think sounds reasonable given what already exists. Harder, but more honest.';
+  } else {
+    desc.textContent = 'Sliders pre-fill with the city\'s real 2026 numbers. Easier to engage with, but you may find yourself only tweaking at the margins \u2014 anchored to choices already made by others.';
+  }
+}
 
 // ── Build sliders ──────────────────────────────────────────────
+
+function toggleEmpDots() {
+  const btn = document.getElementById('emp-toggle-btn');
+  const showing = btn.textContent.trim() === 'Hide org size';
+  DEPTS.forEach(d => {
+    const el = document.getElementById(`emp-${d.id}`);
+    if (el) el.style.display = showing ? 'none' : 'flex';
+  });
+  btn.textContent = showing ? 'Show org size' : 'Hide org size';
+}
+
+function buildEmpDots(dept) {
+  // Each dot = 1 employee. Seasonal staff counted as 1/5 (they're part-time).
+  // Cap display at 60 dots to avoid overwhelming the UI.
+  const total = Math.min(Math.round(dept.employees), 60);
+  const sworn = Math.min(dept.sworn || 0, total);
+  let dots = '';
+  for (let i = 0; i < total; i++) {
+    dots += `<div class="emp-dot${i < sworn ? ' sworn' : ''}"></div>`;
+  }
+  // If actual employees > 60, add a "+N more" indicator
+  const extra = Math.round(dept.employees) - 60;
+  return `<div class="emp-dots">${dots}</div>${extra > 0 ? `<span class="emp-label">+${extra}</span>` : ''}`;
+}
+
 function buildSliders() {
   const panel = document.getElementById('sliders-panel');
   panel.innerHTML = '';
 
+  // Apply start mode
+  DEPTS.forEach(d => {
+    state[d.id] = startMode === 'actual' ? d.actual : 0;
+  });
+
   // Phase badge
   const badgeDiv = document.createElement('div');
-  badgeDiv.innerHTML = '<div class="phase-badge input" id="phase-badge"><span class="phase-dot"></span>STEP 1 OF 2 -- SET YOUR PRIORITIES</div>';
+  badgeDiv.innerHTML = '<div class="phase-badge input" id="phase-badge"><span class="phase-dot"></span>STEP 1 OF 2 \u2014 SET YOUR PRIORITIES</div>';
   panel.appendChild(badgeDiv);
 
   // Scale ruler
@@ -589,7 +798,13 @@ function buildSliders() {
       <span class="bl-sw" style="width:18px;background:var(--stone);opacity:.5"></span>City actual
     </span>
     <span><span class="bl-sw" style="width:18px;background:var(--city-blue)"></span>Your allocation</span>
-    <span style="color:var(--text3);font-size:.58rem">-- bars share the same scale</span>
+    <span style="color:var(--text3);font-size:.58rem">\u2014 bars share the same scale</span>
+    <span id="emp-toggle-wrap" style="display:none;margin-left:auto">
+      <button onclick="toggleEmpDots()" id="emp-toggle-btn"
+        style="font-family:var(--font-mono);font-size:.6rem;padding:.2rem .55rem;border-radius:4px;border:1px solid var(--border2);background:var(--white);color:var(--text2);cursor:pointer">
+        Show org size
+      </button>
+    </span>
   `;
   panel.appendChild(legend);
 
@@ -604,23 +819,24 @@ function buildSliders() {
         <span class="cluster-total">Total: <b id="ctotal-${cluster.id}">$0</b></span>
       </div>
     `;
-
     depts.forEach(dept => {
       const row = document.createElement('div');
       row.className = 'dept-row';
       const aPct = (dept.actual / SLIDER_MAX * 100).toFixed(2);
-
+      const initVal = state[dept.id];
+      const initPct = (initVal / SLIDER_MAX * 100).toFixed(2);
       row.innerHTML = `
         <div class="dept-top">
           <div class="dept-name">
             ${dept.label}
             <small>${dept.note}</small>
+            <div class="dept-emp-viz" id="emp-${dept.id}" style="display:none">${dept.employees ? buildEmpDots(dept) + `<span class="emp-label">${dept.employees} staff${dept.sworn ? ` (${dept.sworn} sworn)` : ''}</span>` : ''}</div>
           </div>
           <div class="dept-controls">
             <input type="text" class="dept-text-input" id="val-${dept.id}"
-              value="$0" data-id="${dept.id}"
+              value="${fmt(initVal)}" data-id="${dept.id}"
               aria-label="Dollar amount for ${dept.label}">
-            <div class="dept-pct" id="pct-${dept.id}">0.0%</div>
+            <div class="dept-pct" id="pct-${dept.id}">${(initVal/TOTAL*100).toFixed(1)}%</div>
           </div>
         </div>
         <div class="dept-bar-row" id="barrow-${dept.id}">
@@ -630,10 +846,10 @@ function buildSliders() {
             <div class="bar-tick" style="left:75%"></div>
           </div>
           <div class="bar-actual" id="bar-actual-${dept.id}" style="width:${aPct}%"></div>
-          <div class="bar-yours" id="bar-yours-${dept.id}" style="width:0%;background:${cluster.hex}cc"></div>
-          <div class="bar-thumb at-zero" id="thumb-${dept.id}"></div>
+          <div class="bar-yours" id="bar-yours-${dept.id}" style="width:${initPct}%;background:${cluster.hex}cc"></div>
+          <div class="bar-thumb ${initVal===0?'at-zero':''}" id="thumb-${dept.id}" ${initVal>0?`style="left:calc(${initPct}% - 2px)"`:''}></div>
           <input type="range" id="slider-${dept.id}"
-            min="0" max="${SLIDER_MAX}" step="${STEP}" value="0"
+            min="0" max="${SLIDER_MAX}" step="${STEP}" value="${initVal}"
             aria-label="${dept.label} budget slider">
         </div>
       `;
@@ -644,8 +860,7 @@ function buildSliders() {
 
   // Wire sliders
   DEPTS.forEach(dept => {
-    const slider = document.getElementById(`slider-${dept.id}`);
-    slider.addEventListener('input', function() {
+    document.getElementById(`slider-${dept.id}`).addEventListener('input', function() {
       state[dept.id] = parseInt(this.value);
       refreshDept(dept.id);
       updateGlobal();
@@ -657,7 +872,6 @@ function buildSliders() {
   DEPTS.forEach(dept => {
     const input = document.getElementById(`val-${dept.id}`);
     if (!input) return;
-
     input.addEventListener('focus', function() {
       this.value = state[dept.id] > 0 ? state[dept.id].toString() : '';
       this.select();
@@ -697,18 +911,10 @@ function refreshDept(id) {
   const v = state[id];
   const sPct = v / SLIDER_MAX * 100;
   const tPct = v / TOTAL * 100;
-
   document.getElementById(`bar-yours-${id}`).style.width = sPct.toFixed(2) + '%';
-
   const thumb = document.getElementById(`thumb-${id}`);
-  if (v === 0) {
-    thumb.className = 'bar-thumb at-zero';
-    thumb.style.left = '';
-  } else {
-    thumb.className = 'bar-thumb';
-    thumb.style.left = `calc(${sPct.toFixed(2)}% - 2px)`;
-  }
-
+  if (v === 0) { thumb.className = 'bar-thumb at-zero'; thumb.style.left = ''; }
+  else         { thumb.className = 'bar-thumb'; thumb.style.left = `calc(${sPct.toFixed(2)}% - 2px)`; }
   const valEl = document.getElementById(`val-${id}`);
   if (valEl && document.activeElement !== valEl) valEl.value = fmt(v);
   document.getElementById(`pct-${id}`).textContent = tPct.toFixed(1) + '%';
@@ -719,17 +925,17 @@ function updateGlobal() {
   const remaining = TOTAL - allocated;
   const pct = allocated / TOTAL * 100;
 
-  // Pool bar
   const remEl = document.getElementById('pool-remaining');
   remEl.textContent = remaining >= 0 ? fmt(remaining) : '-' + fmt(Math.abs(remaining));
-  remEl.className = 'pool-remaining' + (remaining < 0 ? ' over' : remaining < TOTAL * .04 ? ' close' : '');
+  remEl.className = 'pool-remaining' + (remaining < 0 ? ' over' : remaining < TOTAL*.04 ? ' close' : '');
+
   const fill = document.getElementById('pool-fill');
   fill.style.width = Math.min(pct, 100) + '%';
-  fill.className = 'pool-fill' + (remaining < 0 ? ' over' : remaining < TOTAL * .04 ? ' close' : '');
-  document.getElementById('pool-pct-label').textContent =
-    pct < 1 ? '0% allocated -- drag the sliders to begin' : pct.toFixed(1) + '% allocated';
+  fill.className = 'pool-fill' + (remaining < 0 ? ' over' : remaining < TOTAL*.04 ? ' close' : '');
 
-  // Cluster totals
+  document.getElementById('pool-pct-label').textContent =
+    pct < 1 ? '0% allocated \u2014 drag the sliders to begin' : pct.toFixed(1) + '% allocated';
+
   CLUSTERS.forEach(c => {
     const sum = DEPTS.filter(d=>d.cluster===c.id).reduce((a,d)=>a+state[d.id],0);
     document.getElementById(`ctotal-${c.id}`).textContent = fmt(sum);
@@ -737,7 +943,6 @@ function updateGlobal() {
     if (legEl) legEl.textContent = allocated > 0 ? (sum/allocated*100).toFixed(1)+'%' : '--';
   });
 
-  // Donut
   let cum = 0; const stops = [];
   CLUSTERS.forEach(c => {
     const sum = DEPTS.filter(d=>d.cluster===c.id).reduce((a,d)=>a+state[d.id],0);
@@ -750,31 +955,137 @@ function updateGlobal() {
   document.getElementById('donut').style.background =
     stops.length ? `conic-gradient(${stops.join(',')})` : 'var(--cream2)';
 
-  // Sidebar stats
   const funded  = DEPTS.filter(d=>state[d.id]>0).length;
   const largest = DEPTS.filter(d=>state[d.id]>0).sort((a,b)=>state[b.id]-state[a.id])[0];
   const safety  = DEPTS.filter(d=>d.cluster==='safety').reduce((a,d)=>a+state[d.id],0);
+
   document.getElementById('stat-allocated').textContent = fmt(allocated);
   document.getElementById('stat-remaining').textContent = remaining>=0 ? fmt(remaining) : '-'+fmt(Math.abs(remaining));
   document.getElementById('stat-funded').textContent    = funded + ' / ' + DEPTS.length;
-  document.getElementById('stat-largest').textContent   = largest ? largest.label.split(' ')[0] : '--';
+  document.getElementById('stat-largest').textContent   = largest ? largest.label.replace(/&#x[^;]+;/g,'').trim().split(' ')[0] : '--';
   document.getElementById('stat-safety').textContent    = allocated>0 ? (safety/allocated*100).toFixed(1)+'%' : '--';
 
-  // Mobile strip
-  const ma = document.getElementById('mob-allocated');
-  const mr = document.getElementById('mob-remaining');
-  const mf = document.getElementById('mob-funded');
-  if (ma) ma.textContent = fmt(allocated);
-  if (mr) mr.textContent = remaining>=0 ? fmt(remaining) : '-'+fmt(Math.abs(remaining));
-  if (mf) mf.textContent = funded+'/'+DEPTS.length;
+  ['mob-allocated','mob-remaining','mob-funded'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (i===0) el.textContent = fmt(allocated);
+    if (i===1) el.textContent = remaining>=0 ? fmt(remaining) : '-'+fmt(Math.abs(remaining));
+    if (i===2) el.textContent = funded+'/'+DEPTS.length;
+  });
 }
 
 // ── Submit ─────────────────────────────────────────────────────
+
+function buildShareCard(diffs, allocated, overBudget) {
+  const TOTAL = 82350000;
+  const SLIDER_MAX = 37400000;
+
+  // Pie chart — cluster breakdown of YOUR allocation
+  const clusterTotals = {};
+  CLUSTERS.forEach(c => {
+    clusterTotals[c.id] = DEPTS.filter(d=>d.cluster===c.id).reduce((a,d)=>a+state[d.id],0);
+  });
+  let cum = 0;
+  const pieStops = [];
+  CLUSTERS.forEach(c => {
+    if (clusterTotals[c.id] > 0 && allocated > 0) {
+      const pct = clusterTotals[c.id]/allocated*100;
+      pieStops.push(`${c.hex} ${cum.toFixed(1)}% ${(cum+pct).toFixed(1)}%`);
+      cum += pct;
+    }
+  });
+  if (cum < 100) pieStops.push(`var(--cream2) ${cum.toFixed(1)}% 100%`);
+  const pieGrad = pieStops.length ? `conic-gradient(${pieStops.join(',')})` : 'var(--cream2)';
+
+  // Pie legend
+  const pieLegend = CLUSTERS.map(c => {
+    const pct = allocated > 0 ? (clusterTotals[c.id]/allocated*100).toFixed(0) : 0;
+    return `<div style="display:flex;align-items:center;gap:.3rem;font-size:.58rem;color:var(--text2)">
+      <span style="width:8px;height:8px;border-radius:2px;background:${c.hex};flex-shrink:0;display:inline-block"></span>
+      <span>${c.label.split(' ')[0]}: ${pct}%</span>
+    </div>`;
+  }).join('');
+
+  // Sort diffs by absolute delta for most interesting view
+  const sortedDiffs = [...diffs].sort((a,b) => Math.abs(b.delta) - Math.abs(a.delta));
+  const maxBar = SLIDER_MAX;
+
+  const barRows = sortedDiffs.map(d => {
+    const aW = (d.actual/maxBar*100).toFixed(1);
+    const yW = (d.yours/maxBar*100).toFixed(1);
+    const cluster = CLUSTERS.find(c=>c.id===d.cluster);
+    const clrHex = cluster ? cluster.hex : '#888';
+    const delta = d.delta;
+    const dStr = Math.abs(delta) < 50000 ? '~' : (delta>0?'+':'')+fmtShort(delta);
+    const dCls = delta > 100000 ? 'pos' : delta < -100000 ? 'neg' : 'zero';
+    const cleanLabel = d.label.replace(/&#x[^;]+;\s*/g, '').replace(/&amp;/g,'&');
+    return `
+      <div class="sc-bar-row">
+        <div class="sc-bar-name" title="${cleanLabel}">${cleanLabel}</div>
+        <div class="sc-bar-track">
+          <div class="sc-bar-actual" style="width:${aW}%;background:${clrHex}"></div>
+          <div class="sc-bar-yours"  style="width:${yW}%;background:${clrHex}"></div>
+        </div>
+        <div class="sc-bar-delta ${dCls}">${dStr}</div>
+      </div>`;
+  }).join('');
+
+  const safety = DEPTS.filter(d=>d.cluster==='safety').reduce((a,d)=>a+state[d.id],0);
+  const ySafetyPct = allocated > 0 ? (safety/allocated*100).toFixed(0) : 0;
+  const aSafetyPct = '57';
+
+  const biggestAdd = diffs.filter(d=>d.delta>100000).sort((a,b)=>b.delta-a.delta)[0];
+  const biggestCut = diffs.filter(d=>d.delta<-100000).sort((a,b)=>a.delta-b.delta)[0];
+
+  return `
+  <div class="share-card-wrap">
+    <div class="share-card-header">
+      <div>
+        <h3>Your budget snapshot</h3>
+        <p>Screenshot or share to show your priorities</p>
+      </div>
+      <button class="screenshot-btn" onclick="window.print()">&#x1F4F7; Screenshot / Print</button>
+    </div>
+    <div class="share-card" id="share-card">
+      <div class="sc-top">
+        <div class="sc-top-left">
+          <h4>My Bloomington Budget 2026</h4>
+          <p>CITY OF BLOOMINGTON, INDIANA &bull; bloomington.in.gov/city/budget</p>
+        </div>
+        <div class="sc-top-right">
+          <div class="sc-big">${fmt(allocated)}</div>
+          <div class="sc-small">${overBudget ? 'OVER BUDGET +'+fmtShort(allocated-TOTAL) : ((allocated/TOTAL*100).toFixed(0)+'% allocated')}</div>
+        </div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-pie-wrap">
+          <div class="sc-pie" style="background:${pieGrad}"></div>
+          <div style="display:flex;flex-direction:column;gap:.2rem;width:100%">${pieLegend}</div>
+        </div>
+        <div>
+          <div style="font-size:.58rem;font-family:var(--font-mono);color:var(--text3);margin-bottom:.4rem;display:flex;gap:.75rem">
+            <span style="display:flex;align-items:center;gap:.25rem"><span style="width:14px;height:6px;border-radius:2px;background:var(--city-blue);opacity:.35;display:inline-block"></span>City actual</span>
+            <span style="display:flex;align-items:center;gap:.25rem"><span style="width:14px;height:9px;border-radius:2px;background:var(--city-blue);display:inline-block"></span>Mine</span>
+            <span>Sorted by biggest change</span>
+          </div>
+          <div class="sc-bars">${barRows}</div>
+        </div>
+      </div>
+      <div class="sc-footer">
+        <div class="sc-footer-stat">Emergency services: <b>${ySafetyPct}%</b> <span style="color:var(--text3)">(city: ${aSafetyPct}%)</span></div>
+        ${biggestAdd ? `<div class="sc-footer-stat">Biggest increase: <b>${biggestAdd.label.replace(/&#x[^;]+;\s*/g,'').split(' ').slice(0,2).join(' ')}</b> ${fmtShort(biggestAdd.delta)}</div>` : ''}
+        ${biggestCut ? `<div class="sc-footer-stat">Biggest cut: <b>${biggestCut.label.replace(/&#x[^;]+;\s*/g,'').split(' ').slice(0,2).join(' ')}</b> ${fmtShort(biggestCut.delta)}</div>` : ''}
+        <div class="sc-footer-brand">bsquarebulletin.com</div>
+      </div>
+    </div>
+  </div>`;
+}
+
 function submitBudget() {
   revealed = true;
-
   DEPTS.forEach(d => document.getElementById(`bar-actual-${d.id}`)?.classList.add('visible'));
   document.getElementById('actual-legend')?.classList.add('visible');
+  const etw = document.getElementById('emp-toggle-wrap'); if (etw) etw.style.display = 'inline-flex';
 
   const allocated = Object.values(state).reduce((a,b)=>a+b,0);
   const overBudget = allocated > TOTAL;
@@ -796,10 +1107,14 @@ function submitBudget() {
     </div>
   `;
 
+  // Build shareable card
+  const shareCardHtml = buildShareCard(diffs, allocated, overBudget);
+  document.getElementById('results-body').innerHTML = shareCardHtml;
+  // Then append the detailed table
   let html = `<div style="display:flex;gap:1rem;margin-bottom:.55rem;font-size:.6rem;font-family:var(--font-mono);color:var(--text3)">
     <span style="display:flex;align-items:center;gap:.3rem"><span style="width:16px;height:5px;border-radius:2px;background:var(--stone);opacity:.5;display:inline-block"></span>City actual</span>
     <span style="display:flex;align-items:center;gap:.3rem"><span style="width:16px;height:9px;border-radius:2px;background:var(--city-blue);display:inline-block"></span>Your allocation</span>
-    <span>-- all bars on the same scale</span>
+    <span>\u2014 all bars on the same scale</span>
   </div>`;
 
   CLUSTERS.forEach(cluster => {
@@ -836,24 +1151,22 @@ function submitBudget() {
 
   html += `<div class="narrative">
     <h3>What your priorities reveal</h3>
-    ${biggestAdd ? `<p>Your biggest increase: <strong>${biggestAdd.label}</strong> -- you'd spend <strong>${fmtShort(biggestAdd.yours)}</strong>, ${fmtShort(biggestAdd.delta)} more than the city's actual ${fmtShort(biggestAdd.actual)}.</p>` : '<p>You did not meaningfully increase any department above the actual budget.</p>'}
-    ${biggestCut ? `<p>Your biggest cut: <strong>${biggestCut.label}</strong> -- you'd spend <strong>${fmtShort(biggestCut.yours)}</strong>, ${fmtShort(Math.abs(biggestCut.delta))} less than the city's ${fmtShort(biggestCut.actual)}.</p>` : '<p>You did not meaningfully cut any department.</p>'}
-    <p>You directed <strong>${ySafety}%</strong> to public safety. The city sends <strong>${aSafety}%</strong> -- you are ${Math.abs(parseFloat(sDiff))<0.5?'almost exactly aligned':parseFloat(sDiff)>0?`${Math.abs(sDiff)} points higher`:`${Math.abs(sDiff)} points lower`}.</p>
-    ${overBudget ? `<p style="color:var(--red)">Your total exceeds the pool by <strong>${fmt(allocated-TOTAL)}</strong>. Something would need to be cut or new revenue found.</p>` : allocated<TOTAL*.88 ? `<p style="color:var(--amber)">You left <strong>${fmt(TOTAL-allocated)}</strong> unallocated -- in a real budget that means reduced services or unspent reserves.</p>` : `<p style="color:var(--green)">Your budget is within range of the total pool -- a reasonable balance.</p>`}
+    ${biggestAdd ? `<p>Your biggest increase: <strong>${biggestAdd.label}</strong> \u2014 you\u2019d spend <strong>${fmtShort(biggestAdd.yours)}</strong>, ${fmtShort(biggestAdd.delta)} more than the city\u2019s actual ${fmtShort(biggestAdd.actual)}.</p>` : '<p>You didn\u2019t meaningfully increase any department above the actual budget.</p>'}
+    ${biggestCut ? `<p>Your biggest cut: <strong>${biggestCut.label}</strong> \u2014 you\u2019d spend <strong>${fmtShort(biggestCut.yours)}</strong>, ${fmtShort(Math.abs(biggestCut.delta))} less than the city\u2019s ${fmtShort(biggestCut.actual)}.</p>` : '<p>You didn\u2019t meaningfully cut any department.</p>'}
+    <p>You directed <strong>${ySafety}%</strong> to public safety. The city sends <strong>${aSafety}%</strong> \u2014 you are ${Math.abs(parseFloat(sDiff))<0.5?'almost exactly aligned':parseFloat(sDiff)>0?`${Math.abs(sDiff)} points higher, prioritizing enforcement and emergency services more`:`${Math.abs(sDiff)} points lower, shifting resources toward other services`}.</p>
+    ${overBudget ? `<p style="color:var(--red)">Your total exceeds the pool by <strong>${fmt(allocated-TOTAL)}</strong>. To balance the books, something would need to be cut \u2014 or the city would need to find new revenue.</p>` : allocated<TOTAL*.88 ? `<p style="color:var(--amber)">You left <strong>${fmt(TOTAL-allocated)}</strong> unallocated. In a real budget that means reduced services or money sitting in reserves.</p>` : `<p style="color:var(--green)">\u2713 Your budget is within range of the total pool \u2014 a workable balance.</p>`}
   </div>`;
 
-  document.getElementById('results-body').innerHTML = html;
+  document.getElementById('results-body').innerHTML += html;
   document.getElementById('reveal-panel').classList.add('open');
-
   document.getElementById('cta-bar').innerHTML = `
-    <button class="cta-btn cta-ghost" onclick="resetAll()">&larr; Start over</button>
+    <button class="cta-btn cta-ghost" onclick="resetAll()">&larr; Try again</button>
     <button class="cta-btn cta-reveal" onclick="document.getElementById('reveal-panel').scrollIntoView({behavior:'smooth'})">See full comparison &darr;</button>
   `;
   const pb = document.getElementById('phase-badge');
-  if (pb) { pb.className='phase-badge reveal'; pb.innerHTML='<span class="phase-dot"></span>STEP 2 OF 2 -- RESULTS'; }
+  if (pb) { pb.className='phase-badge reveal'; pb.innerHTML='<span class="phase-dot"></span>STEP 2 OF 2 \u2014 RESULTS'; }
   setTimeout(()=>document.getElementById('reveal-panel').scrollIntoView({behavior:'smooth',block:'start'}),120);
-
-  if (typeof buildSessionPayload === 'function' && typeof sendToSheets === 'function') {
+  if (typeof buildSessionPayload==='function' && typeof sendToSheets==='function') {
     sendToSheets(buildSessionPayload()).catch(()=>{});
   }
 }
@@ -868,13 +1181,16 @@ function resetAll() {
     document.getElementById(`bar-actual-${d.id}`)?.classList.remove('visible');
   });
   document.getElementById('actual-legend')?.classList.remove('visible');
+  const etw2 = document.getElementById('emp-toggle-wrap'); if (etw2) etw2.style.display = 'none';
+  DEPTS.forEach(d => { const el = document.getElementById(`emp-${d.id}`); if (el) el.style.display = 'none'; });
+  const eb = document.getElementById('emp-toggle-btn'); if (eb) eb.textContent = 'Show org size';
   document.getElementById('reveal-panel').classList.remove('open');
   document.getElementById('cta-bar').innerHTML = `
     <button class="cta-btn cta-primary" onclick="submitBudget()">Submit my budget &rarr;</button>
     <button class="cta-btn cta-ghost" onclick="resetAll()">Start over</button>
   `;
   const pb = document.getElementById('phase-badge');
-  if (pb) { pb.className='phase-badge input'; pb.innerHTML='<span class="phase-dot"></span>STEP 1 OF 2 -- SET YOUR PRIORITIES'; }
+  if (pb) { pb.className='phase-badge input'; pb.innerHTML='<span class="phase-dot"></span>STEP 1 OF 2 \u2014 SET YOUR PRIORITIES'; }
   updateGlobal();
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -889,22 +1205,14 @@ function fmtShort(v) {
   return a>=1e6 ? s+'$'+(a/1e6).toFixed(1)+'M' : s+'$'+Math.round(a/1000)+'K';
 }
 
-// ============================================================
-// TELEMETRY ENGINE
-// ============================================================
+// ── Telemetry ──────────────────────────────────────────────────
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwO0qkkZYTrB2vONCI1bdC7jyTnqEmxN5ocC3HWL8pgModRDPp7DMv6Y2WDN00d6rU2/exec";
 const LOGGING_ENABLED = APPS_SCRIPT_URL !== "YOUR_APPS_SCRIPT_URL_HERE";
 
 const SESSION = {
-  id: crypto.randomUUID(),
-  startTime: Date.now(),
-  firstSlider: null,
-  events: [],
-  prevValues: {},
-  revisits: {},
-  totalMoves: 0,
-  location: null,
-  device: null,
+  id: crypto.randomUUID(), startTime: Date.now(),
+  firstSlider: null, events: [], prevValues: {}, revisits: {},
+  totalMoves: 0, location: null, device: null,
 };
 DEPTS.forEach(d => { SESSION.prevValues[d.id] = 0; SESSION.revisits[d.id] = 0; });
 
@@ -921,68 +1229,38 @@ function collectDevice() {
   else if (/Linux/.test(ua)) os = "Linux";
   else if (/Android/.test(ua)) os = "Android";
   else if (/iPhone|iPad/.test(ua)) os = "iOS";
-  const isMobile = /Mobi|Android|iPhone|iPad/.test(ua);
   SESSION.device = {
-    type: isMobile ? "mobile" : "desktop",
-    screenWidth: window.screen.width,
-    screenHeight: window.screen.height,
-    browser, os,
-    language: navigator.language,
+    type: /Mobi|Android|iPhone|iPad/.test(ua) ? "mobile" : "desktop",
+    screenWidth: window.screen.width, screenHeight: window.screen.height,
+    browser, os, language: navigator.language,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     pixelRatio: window.devicePixelRatio || 1,
+    startMode,
   };
 }
 
 async function collectLocation() {
-  // Providers that work from both local file:// and https:// origins
   const providers = [
-    {
-      // cloudflare workers - extremely permissive CORS, no auth needed
-      url: "https://cloudflare.com/cdn-cgi/trace",
-      parse: async (res) => {
-        const text = await res.text();
-        const get = k => { const m = text.match(new RegExp(k+"=(.+)")); return m ? m[1].trim() : ""; };
-        const ip = get("ip"), loc = get("loc");
-        return ip ? {method:"cf-trace", country:loc||"", region:"", city:"", latitude:null, longitude:null, ip} : null;
-      },
-      raw: true
-    },
-    {
-      // ipapi.co with a different approach - use their no-cors friendly endpoint
-      url: "https://ipinfo.io/json?token=",
-      parse: async (res) => {
-        const d = await res.json();
-        const [lat, lon] = (d.loc||"").split(",").map(Number);
-        return d.ip ? {method:"ipinfo", country:d.country||"", region:d.region||"", city:d.city||"", latitude:lat||null, longitude:lon||null, ip:d.ip||""} : null;
-      },
-      raw: true
-    },
-    {
-      // api64.ipify.org - just gets IP, no geo, but always works
-      url: "https://api64.ipify.org?format=json",
-      parse: async (res) => {
-        const d = await res.json();
-        return d.ip ? {method:"ipify", country:"", region:"", city:"", latitude:null, longitude:null, ip:d.ip} : null;
-      },
-      raw: true
-    },
+    { url:"https://cloudflare.com/cdn-cgi/trace",
+      parse: async r => { const t=await r.text(); const g=k=>{const m=t.match(new RegExp(k+'=(.+)'));return m?m[1].trim():''}; const ip=g('ip'),loc=g('loc'); return ip?{method:'cf',country:loc,ip}:null; }},
+    { url:"https://ipinfo.io/json?token=",
+      parse: async r => { const d=await r.json(); const [lat,lon]=(d.loc||'').split(',').map(Number); return d.ip?{method:'ipinfo',country:d.country||'',region:d.region||'',city:d.city||'',latitude:lat||null,longitude:lon||null,ip:d.ip}:null; }},
+    { url:"https://api64.ipify.org?format=json",
+      parse: async r => { const d=await r.json(); return d.ip?{method:'ipify',ip:d.ip}:null; }},
   ];
-
   for (const p of providers) {
     try {
-      const res = await fetch(p.url, {signal: AbortSignal.timeout(5000)});
+      const res = await fetch(p.url, {signal:AbortSignal.timeout(5000)});
       if (!res.ok) continue;
       const parsed = await p.parse(res);
       if (parsed) { SESSION.location = parsed; break; }
-    } catch(e) { /* try next */ }
+    } catch(e) {}
   }
-  if (!SESSION.location) SESSION.location = {method:"unavailable"};
-
+  if (!SESSION.location) SESSION.location = {method:'unavailable'};
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
-      pos => { SESSION.location = {...SESSION.location, method:"gps", latitude:pos.coords.latitude, longitude:pos.coords.longitude, accuracy:Math.round(pos.coords.accuracy)}; },
-      () => {},
-      {enableHighAccuracy:true, timeout:8000, maximumAge:0}
+      pos => { SESSION.location = {...SESSION.location, method:'gps', latitude:pos.coords.latitude, longitude:pos.coords.longitude, accuracy:Math.round(pos.coords.accuracy)}; },
+      ()=>{}, {enableHighAccuracy:true,timeout:8000,maximumAge:0}
     );
   }
 }
@@ -991,70 +1269,42 @@ function logSliderEvent(deptId, newValue) {
   const elapsed = (Date.now()-SESSION.startTime)/1000;
   if (SESSION.firstSlider===null) SESSION.firstSlider = elapsed;
   SESSION.revisits[deptId] = (SESSION.revisits[deptId]||0)+1;
-  SESSION.prevValues[deptId] = newValue;
   SESSION.totalMoves++;
-  const allocated = Object.values(state).reduce((a,b)=>a+b,0);
-  const dept = DEPTS.find(d=>d.id===deptId);
-  const event = {type:"event",sessionId:SESSION.id,timestamp:Date.now(),eventType:"slider_change",deptId,deptName:dept?.label||deptId,newValue,elapsed,cumulativeAllocated:allocated};
-  SESSION.events.push(event);
-  // Events are batched and sent only on submit -- no per-slider network calls
+  SESSION.events.push({deptId, newValue, elapsed});
 }
 
 async function sendToSheets(payload) {
   if (!LOGGING_ENABLED) return;
   try {
-    // no-cors POST strips the body -- use a GET with encoded data instead
     const encoded = encodeURIComponent(JSON.stringify(payload));
     const url = APPS_SCRIPT_URL + "?data=" + encoded;
-    // Use an image ping -- fires cross-origin with no CORS issues, no body needed
-    // Apps Script reads from e.parameter.data in doGet
-    const img = new Image();
-    img.src = url;
-    // Also try fetch GET as fallback
+    new Image().src = url;
     fetch(url, {mode:"no-cors"}).catch(()=>{});
   } catch(e) {}
 }
 
 function buildSessionPayload() {
-  const allocated = Object.values(state).reduce((a,b)=>a+b,0);
   const allocations = {};
   DEPTS.forEach(d => { allocations[d.id] = state[d.id]; });
   return {
-    type:"session_complete",
-    sessionId:SESSION.id,
-    timestamp:Date.now(),
-    referrer:document.referrer||"",
-    device:SESSION.device,
-    location:SESSION.location,
-    durationSeconds:(Date.now()-SESSION.startTime)/1000,
-    interactions:{
-      totalSliderMoves:SESSION.totalMoves,
-      timeToFirstSlider:SESSION.firstSlider||(Date.now()-SESSION.startTime)/1000,
-      timeToSubmit:(Date.now()-SESSION.startTime)/1000,
-      deptsRevisited:Object.values(SESSION.revisits).filter(v=>v>1).length,
-      perDeptMoves:SESSION.revisits,
+    type: "session_complete",
+    sessionId: SESSION.id, timestamp: Date.now(),
+    referrer: document.referrer||"", startMode,
+    device: SESSION.device, location: SESSION.location,
+    durationSeconds: (Date.now()-SESSION.startTime)/1000,
+    interactions: {
+      totalSliderMoves: SESSION.totalMoves,
+      timeToFirstSlider: SESSION.firstSlider || (Date.now()-SESSION.startTime)/1000,
+      timeToSubmit: (Date.now()-SESSION.startTime)/1000,
+      deptsRevisited: Object.values(SESSION.revisits).filter(v=>v>1).length,
     },
     allocations,
   };
 }
 
-let maxScroll = 0;
-window.addEventListener("scroll", ()=>{
-  const pct = Math.round(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100);
-  if (pct>maxScroll) maxScroll=pct;
-},{passive:true});
-
-
-
 collectDevice();
 collectLocation();
-try {
-  buildSliders();
-} catch(err) {
-  document.getElementById('sliders-panel').innerHTML =
-    '<div style="padding:2rem;color:#C0392B;font-family:monospace;font-size:.8rem;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;margin:1rem">' +
-    '<strong>Build error:</strong> ' + err.message + '<br><br>' + err.stack + '</div>';
-}
+buildSliders();
 </script>
 </body>
 </html>
