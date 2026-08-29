@@ -349,6 +349,7 @@ input[type=range] {
   position: absolute; inset: 0; width: 100%; height: 100%;
   opacity: 0; cursor: pointer; z-index: 6; margin: 0;
   -webkit-appearance: none; appearance: none;
+  touch-action: pan-y; /* tell browser: vertical is scroll, not slider */
 }
 
 /* ── CTA ── */
@@ -431,9 +432,9 @@ input[type=range] {
 .sc-bar-row { display: grid; grid-template-columns: 95px 1fr 46px; align-items: center; gap: .4rem; }
 .sc-bars { max-height: 320px; overflow-y: auto; }
 .sc-bar-name { font-size: .62rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sc-bar-track { position: relative; height: 14px; background: var(--cream2); border-radius: 2px; overflow: hidden; }
-.sc-bar-actual { position: absolute; inset: 0; height: 100%; border-radius: 2px; opacity: .3; }
-.sc-bar-yours  { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 2px; }
+.sc-bar-track { position: relative; height: 18px; background: var(--cream2); border-radius: 3px; overflow: hidden; }
+.sc-bar-actual { position: absolute; bottom: 0; left: 0; height: 7px; border-radius: 0 2px 2px 0; opacity: .28; }
+.sc-bar-yours  { position: absolute; top: 0; left: 0; height: 11px; border-radius: 0 2px 2px 0; }
 .sc-bar-delta { font-family: var(--font-mono); font-size: .58rem; text-align: right; font-weight: 500; white-space: nowrap; }
 .sc-bar-delta.pos { color: var(--green); }
 .sc-bar-delta.neg { color: var(--red); }
@@ -860,12 +861,46 @@ function buildSliders() {
 
   // Wire sliders
   DEPTS.forEach(dept => {
-    document.getElementById(`slider-${dept.id}`).addEventListener('input', function() {
+    const slider = document.getElementById(`slider-${dept.id}`);
+
+    slider.addEventListener('input', function() {
       state[dept.id] = parseInt(this.value);
       refreshDept(dept.id);
       updateGlobal();
       logSliderEvent(dept.id, state[dept.id]);
     });
+
+    // Mobile: suppress slider if user is scrolling vertically
+    let touchStartX = 0, touchStartY = 0, isScrolling = null;
+    slider.addEventListener('touchstart', function(e) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      isScrolling = null;
+    }, { passive: true });
+
+    slider.addEventListener('touchmove', function(e) {
+      if (isScrolling === null) {
+        const dx = Math.abs(e.touches[0].clientX - touchStartX);
+        const dy = Math.abs(e.touches[0].clientY - touchStartY);
+        // If first significant movement is more vertical than horizontal -> scroll
+        if (dx > 3 || dy > 3) {
+          isScrolling = dy > dx;
+        }
+      }
+      if (isScrolling) {
+        e.stopPropagation();
+        // Don't call preventDefault -- let page scroll naturally
+      }
+    }, { passive: true });
+
+    // If we decided it was a scroll, swallow the change event
+    slider.addEventListener('touchend', function(e) {
+      if (isScrolling) {
+        // Restore previous value so scroll doesn't accidentally change budget
+        this.value = state[dept.id];
+        isScrolling = null;
+      }
+    }, { passive: true });
   });
 
   // Wire text inputs
@@ -1010,15 +1045,23 @@ function buildShareCard(diffs, allocated, overBudget) {
   const sortedDiffs = [...diffs].sort((a,b) => Math.abs(b.delta) - Math.abs(a.delta));
   const maxBar = SLIDER_MAX;
 
-  const barRows = sortedDiffs.map(d => {
+  // Add column headers row
+  const barHeader = `<div class="sc-bar-row" style="margin-bottom:.2rem;opacity:.6">
+    <div class="sc-bar-name" style="font-size:.52rem;color:var(--text3)">Department</div>
+    <div style="font-size:.52rem;color:var(--text3);font-family:var(--font-mono)">Budget (city vs mine)</div>
+    <div style="font-size:.52rem;color:var(--text3);font-family:var(--font-mono);text-align:right">My change</div>
+  </div>`;
+
+  const barRows = barHeader + sortedDiffs.map(d => {
     const aW = (d.actual/maxBar*100).toFixed(1);
     const yW = (d.yours/maxBar*100).toFixed(1);
     const cluster = CLUSTERS.find(c=>c.id===d.cluster);
     const clrHex = cluster ? cluster.hex : '#888';
     const delta = d.delta;
-    const dStr = Math.abs(delta) < 50000 ? '~' : (delta>0?'+':'')+fmtShort(delta);
+    const dStr = Math.abs(delta) < 50000 ? '–' : (delta>0?'+':'')+fmtShort(delta);
     const dCls = delta > 100000 ? 'pos' : delta < -100000 ? 'neg' : 'zero';
     const cleanLabel = d.label.replace(/&#x[^;]+;\s*/g, '').replace(/&amp;/g,'&');
+    // Show both bars with clear visual separation
     return `
       <div class="sc-bar-row">
         <div class="sc-bar-name" title="${cleanLabel}">${cleanLabel}</div>
@@ -1026,7 +1069,7 @@ function buildShareCard(diffs, allocated, overBudget) {
           <div class="sc-bar-actual" style="width:${aW}%;background:${clrHex}"></div>
           <div class="sc-bar-yours"  style="width:${yW}%;background:${clrHex}"></div>
         </div>
-        <div class="sc-bar-delta ${dCls}">${dStr}</div>
+        <div class="sc-bar-delta ${dCls}" title="${delta>=0?'I added':'I cut'} ${fmtShort(Math.abs(delta))} vs city">${dStr}</div>
       </div>`;
   }).join('');
 
@@ -1063,10 +1106,19 @@ function buildShareCard(diffs, allocated, overBudget) {
           <div style="display:flex;flex-direction:column;gap:.2rem;width:100%">${pieLegend}</div>
         </div>
         <div>
-          <div style="font-size:.58rem;font-family:var(--font-mono);color:var(--text3);margin-bottom:.4rem;display:flex;gap:.75rem">
-            <span style="display:flex;align-items:center;gap:.25rem"><span style="width:14px;height:6px;border-radius:2px;background:var(--city-blue);opacity:.35;display:inline-block"></span>City actual</span>
-            <span style="display:flex;align-items:center;gap:.25rem"><span style="width:14px;height:9px;border-radius:2px;background:var(--city-blue);display:inline-block"></span>Mine</span>
-            <span>Sorted by biggest change</span>
+          <div style="font-size:.6rem;font-family:var(--font-mono);color:var(--text2);margin-bottom:.55rem;display:flex;flex-direction:column;gap:.25rem">
+            <div style="font-weight:600;color:var(--text);font-size:.65rem;margin-bottom:.1rem">How I differ from the city</div>
+            <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+              <span style="display:flex;align-items:center;gap:.3rem">
+                <span style="width:22px;height:5px;border-radius:2px;background:var(--city-blue);opacity:.3;display:inline-block"></span>
+                <span style="color:var(--text3)">City&rsquo;s actual 2026 budget</span>
+              </span>
+              <span style="display:flex;align-items:center;gap:.3rem">
+                <span style="width:22px;height:9px;border-radius:2px;background:var(--city-blue);display:inline-block"></span>
+                <span style="color:var(--text3)">What I&rsquo;d spend</span>
+              </span>
+            </div>
+            <div style="color:var(--text3);font-size:.56rem">Departments ranked by how much I changed them &mdash; biggest differences at top</div>
           </div>
           <div class="sc-bars">${barRows}</div>
         </div>
@@ -1169,6 +1221,26 @@ function submitBudget() {
   if (typeof buildSessionPayload==='function' && typeof sendToSheets==='function') {
     sendToSheets(buildSessionPayload()).catch(()=>{});
   }
+
+  // Unfix the pool bar when share card is in view (so it doesn't cover screenshots)
+  if (window._shareObserver) window._shareObserver.disconnect();
+  window._shareObserver = new IntersectionObserver((entries) => {
+    const bar = document.querySelector('.pool-bar-sticky');
+    if (!bar) return;
+    if (entries[0].isIntersecting) {
+      bar.style.position = 'relative';
+      bar.style.top = 'auto';
+      bar.style.boxShadow = 'none';
+      bar.style.zIndex = '1';
+    } else {
+      bar.style.position = 'sticky';
+      bar.style.top = '0';
+      bar.style.boxShadow = '';
+      bar.style.zIndex = '100';
+    }
+  }, { threshold: 0.1 });
+  const shareCard = document.getElementById('share-card');
+  if (shareCard) window._shareObserver.observe(shareCard);
 }
 
 function resetAll() {
@@ -1192,6 +1264,10 @@ function resetAll() {
   const pb = document.getElementById('phase-badge');
   if (pb) { pb.className='phase-badge input'; pb.innerHTML='<span class="phase-dot"></span>STEP 1 OF 2 \u2014 SET YOUR PRIORITIES'; }
   updateGlobal();
+  // Restore sticky pool bar
+  const bar = document.querySelector('.pool-bar-sticky');
+  if (bar) { bar.style.position=''; bar.style.top=''; bar.style.boxShadow=''; bar.style.zIndex=''; }
+  if (window._shareObserver) { window._shareObserver.disconnect(); window._shareObserver = null; }
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
