@@ -690,8 +690,8 @@ input[type=range] {
     <div class="hero-stats">
       <div class="hero-stat">
         <div class="hero-stat-label">Total pool</div>
-        <div class="hero-stat-val">$82.3M</div>
-        <div class="hero-stat-note">General Fund + LIT, FY 2026</div>
+        <div class="hero-stat-val">$108.9M</div>
+        <div class="hero-stat-note">General Fund + LIT (DLGF-reviewed funds), FY 2026</div>
       </div>
       <div class="hero-stat">
         <div class="hero-stat-label">Departments</div>
@@ -712,8 +712,8 @@ input[type=range] {
   <div class="explainer-item">
     <span class="explainer-icon">&#x1F6AB;</span>
     <div>
-      <div class="explainer-h">Why utilities and transit aren&rsquo;t here</div>
-      <p class="explainer-p">Bloomington Utilities ($57.6M) and Bloomington Transit ($19M) are <strong>self-funded enterprise operations</strong> &mdash; paid by water/sewer ratepayers and federal transit grants, not general taxes. They never compete for this pool of money.</p>
+      <div class="explainer-h">What&rsquo;s in this pool &mdash; and what isn&rsquo;t</div>
+      <p class="explainer-p">This simulator uses the <strong>$108.9M in DLGF-reviewed city funds</strong> &mdash; the general fund plus city-controlled Local Income Tax (LIT) funds. Excluded: Utilities ($57.6M, ratepayer-funded), Transit ($19M, federal grants), and dedicated road/solid waste funds ($10.6M Motor Vehicle Highway + Local Road &amp; Street + Solid Waste). Controller McClellan presented $110.2M as the comparable DLGF total to the council in October 2025.</p>
     </div>
   </div>
   <div class="explainer-item">
@@ -729,16 +729,16 @@ input[type=range] {
 <div class="pool-bar-sticky">
   <div class="pool-top">
     <div class="pool-title">
-      Your budget &mdash; $82,350,000 to allocate
+      Your budget &mdash; $108,900,000 to allocate
       <span>DRAG SLIDERS &bull; ARROW KEYS FOR FINE CONTROL &bull; TYPE &ldquo;5m&rdquo; OR &ldquo;500k&rdquo; IN THE $ FIELD</span>
     </div>
     <div class="pool-remaining-wrap">
       <div class="pool-remaining-label">Remaining</div>
-      <div class="pool-remaining" id="pool-remaining">$82,350,000</div>
+      <div class="pool-remaining" id="pool-remaining">$108,900,000</div>
     </div>
   </div>
   <div class="pool-track"><div class="pool-fill" id="pool-fill" style="width:0%"></div></div>
-  <div class="pool-ticks"><span>$0</span><span id="pool-pct-label">0% allocated &mdash; scroll down and start dragging</span><span>$82.4M</span></div>
+  <div class="pool-ticks"><span>$0</span><span id="pool-pct-label">0% allocated &mdash; scroll down and start dragging</span><span>$108.9M</span></div>
 </div>
 
 <div class="page">
@@ -815,8 +815,8 @@ input[type=range] {
 </div>
 
 <script>
-const TOTAL = 82350000;
-const SLIDER_MAX = 37400000;
+const TOTAL = 108900000;
+const SLIDER_MAX = 31000000;
 const STEP = 50000;
 
 const CLUSTERS = [
@@ -826,20 +826,26 @@ const CLUSTERS = [
   { id:"admin",  label:"Administration & Finance",  hex:"#5B3D7A" },
 ];
 
+// Department actual figures = GF + city-controlled LIT funds (DLGF-reviewed)
+// Source: Controller McClellan's Oct 2025 council presentation ($110.2M DLGF total)
+// Police/Fire: GF only (PS-LIT capital excluded — it's restricted capital, not operating)
+// Public Works: GF only (MVH/LRS motor vehicle & road funds + solid waste are separate enterprise-like funds)
+// Housing: net of federal CDBG/HOME pass-through ($2.1M flows through but costs city nothing)
+// Controller/HR: ED-LIT funded but city-controlled LIT, so included
 const DEPTS = [
-  { id:"police",      cluster:"safety", label:"&#x1F46E; Police Department",         note:"Policing, investigations, enforcement &amp; violence response",    actual:23200000, employees:156, sworn:91  },
-  { id:"fire",        cluster:"safety", label:"&#x1F692; Fire Department",           note:"Fire suppression, emergency medical services, 5 stations",         actual:20400000, employees:117, sworn:102 },
+  { id:"police",      cluster:"safety", label:"&#x1F46E; Police Department",         note:"Policing, investigations, enforcement &amp; violence response",    actual:20100000, employees:156, sworn:91  },
+  { id:"fire",        cluster:"safety", label:"&#x1F692; Fire Department",           note:"Fire suppression, emergency medical services, 5 stations",         actual:18500000, employees:117, sworn:102 },
   { id:"dispatch",    cluster:"safety", label:"&#x1F4DE; Dispatch / 911",            note:"Emergency call routing for all services, Monroe County",           actual:3400000,  employees:18,  sworn:0   },
-  { id:"pw",          cluster:"infra",  label:"&#x1F6E3; Public Works",              note:"Roads, sanitation, fleet, city buildings",                         actual:24900000, employees:180, sworn:0   },
+  { id:"pw",          cluster:"infra",  label:"&#x1F6E3; Public Works",              note:"Roads, sanitation, fleet, city buildings (GF portion)",            actual:14300000, employees:180, sworn:0   },
   { id:"engineering", cluster:"infra",  label:"&#x1F3D7; Engineering",               note:"Infrastructure design, permits, project delivery",                 actual:3800000,  employees:18,  sworn:0   },
   { id:"planning",    cluster:"infra",  label:"&#x1F5FA; Planning & Transportation", note:"Zoning, land use, bike/ped, comprehensive plan",                   actual:3300000,  employees:18,  sworn:0   },
   { id:"its",         cluster:"infra",  label:"&#x1F4BB; Information Technology",    note:"City IT systems, fiber network, cybersecurity",                    actual:6300000,  employees:20,  sworn:0   },
   { id:"parks",       cluster:"human",  label:"&#x1F333; Parks & Recreation",        note:"34 parks, pools, trails, community centers — 53 FT + 450 seasonal",actual:12800000, employees:503, sworn:0   },
-  { id:"housing",     cluster:"human",  label:"&#x1F3E0; Housing & Neighborhood",    note:"Affordable housing programs, code enforcement",                    actual:5800000,  employees:25,  sworn:0   },
+  { id:"housing",     cluster:"human",  label:"&#x1F3E0; Housing & Neighborhood",    note:"Affordable housing, code enforcement (net of federal grants)",      actual:3700000,  employees:25,  sworn:0   },
   { id:"cfrd",        cluster:"human",  label:"&#x1F91D; Community & Family Res.",   note:"Youth programs, social services, community grants",                actual:4900000,  employees:30,  sworn:0   },
   { id:"esd",         cluster:"human",  label:"&#x1F331; Economic & Sustainable",    note:"Business development, sustainability programs",                    actual:3500000,  employees:18,  sworn:0   },
-  { id:"controller",  cluster:"admin",  label:"&#x1F4B0; Controller / Finance",      note:"Payroll, audit, financial reporting",                              actual:5500000,  employees:20,  sworn:0   },
-  { id:"hr",          cluster:"admin",  label:"&#x1F465; Human Resources",           note:"Hiring, benefits, labor relations",                                actual:1700000,  employees:10,  sworn:0   },
+  { id:"controller",  cluster:"admin",  label:"&#x1F4B0; Controller / Finance",      note:"Payroll, audit, financial reporting (ED-LIT funded)",              actual:5500000,  employees:20,  sworn:0   },
+  { id:"hr",          cluster:"admin",  label:"&#x1F465; Human Resources",           note:"Hiring, benefits, labor relations (ED-LIT funded)",                actual:1700000,  employees:10,  sworn:0   },
   { id:"legal",       cluster:"admin",  label:"&#x2696; Legal & Risk Management",    note:"City attorney, contracts, insurance",                              actual:3400000,  employees:12,  sworn:0   },
   { id:"mayor",       cluster:"admin",  label:"&#x1F3DB; Office of the Mayor",       note:"Executive leadership and administration",                          actual:1300000,  employees:8,   sworn:0   },
   { id:"council",     cluster:"admin",  label:"&#x1F5F3; Common Council",            note:"9 elected members and legislative staff",                          actual:1800000,  employees:17,  sworn:0   },
@@ -954,7 +960,7 @@ function buildSliders() {
   // Scale ruler
   const ruler = document.createElement('div');
   ruler.className = 'scale-ruler';
-  ruler.innerHTML = ['$0','$9.4M','$18.7M','$28.1M','$37.4M'].map(m=>`<span>${m}</span>`).join('');
+  ruler.innerHTML = ['$0','$7.8M','$15.5M','$23.3M','$31.0M'].map(m=>`<span>${m}</span>`).join('');
   panel.appendChild(ruler);
 
   // Bar legend
@@ -1178,8 +1184,8 @@ function updateGlobal() {
 // ── Submit ─────────────────────────────────────────────────────
 
 function buildShareCard(diffs, allocated, overBudget) {
-  const TOTAL = 82350000;
-  const SLIDER_MAX = 37400000;
+  const TOTAL = 108900000;
+  const SLIDER_MAX = 31000000;
 
   // Pie chart — cluster breakdown of YOUR allocation
   const clusterTotals = {};
