@@ -95,8 +95,8 @@ body { font-family: var(--font-sans); background: var(--cream); color: var(--tex
   border-radius: 99px; padding: 3px; gap: 0;
 }
 .mode-btn {
-  font-family: var(--font-sans); font-size: .8rem; font-weight: 600;
-  padding: .5rem 1.25rem; border-radius: 99px; border: none;
+  font-family: var(--font-sans); font-size: .75rem; font-weight: 600;
+  padding: .45rem 1rem; border-radius: 99px; border: none;
   cursor: pointer; transition: all .2s; color: rgba(255,255,255,.6);
   background: transparent; letter-spacing: .01em;
 }
@@ -451,6 +451,35 @@ input[type=range] {
 .sc-footer-brand { font-family: var(--font-mono); font-size: .55rem; color: var(--text3); }
 
 
+
+/* ── Share / download buttons ── */
+.share-download-row {
+  display: flex; gap: .5rem; flex-wrap: wrap;
+  margin-top: .65rem;
+}
+.dl-btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--font-mono); font-size: .63rem; font-weight: 500;
+  padding: .35rem .75rem; border-radius: var(--r);
+  border: 1px solid var(--border2); background: var(--white);
+  color: var(--text2); cursor: pointer; transition: all .15s;
+  text-decoration: none;
+}
+.dl-btn:hover { border-color: var(--city-blue); color: var(--city-blue); background: var(--blue-xlight); }
+.dl-btn.instagram { border-color: #C13584; color: #C13584; }
+.dl-btn.instagram:hover { background: #fdf0f8; }
+.dl-btn.reddit { border-color: #FF4500; color: #FF4500; }
+.dl-btn.reddit:hover { background: #fff5f0; }
+.dl-btn.disabled { opacity: .45; cursor: wait; }
+.dl-btn .spinner {
+  width: 10px; height: 10px; border: 1.5px solid currentColor;
+  border-top-color: transparent; border-radius: 50%;
+  animation: spin .6s linear infinite; display: none;
+}
+.dl-btn.loading .spinner { display: block; }
+.dl-btn.loading .dl-icon { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* ── Results tabs ── */
 .results-tabs {
   display: flex; gap: 0; margin-bottom: 1.5rem;
@@ -635,14 +664,17 @@ input[type=range] {
       <div class="mode-toggle-label">How do you want to start?</div>
       <div class="mode-toggle">
         <button class="mode-btn active" id="btn-blank" onclick="setMode('blank')">
-          Start from zero
+          Blank slate
+        </button>
+        <button class="mode-btn" id="btn-reference" onclick="setMode('reference')">
+          Show current levels
         </button>
         <button class="mode-btn" id="btn-actual" onclick="setMode('actual')">
-          Start from actual budget
+          Start at current
         </button>
       </div>
       <div class="mode-description" id="mode-desc">
-        All sliders start at $0 &mdash; you build the budget from scratch. Most revealing.
+        All sliders start at $0 &mdash; no anchors, no hints. Your choices reflect what you actually value. Hardest, most revealing.
       </div>
     </div>
 
@@ -817,7 +849,7 @@ const DEPTS = [
 const state = {};
 DEPTS.forEach(d => state[d.id] = 0);
 let revealed = false;
-let startMode = 'blank'; // 'blank' or 'actual'
+let startMode = 'blank'; // 'blank', 'reference', or 'actual'
 
 // ── Mode toggle ────────────────────────────────────────────────
 function setMode(mode) {
@@ -866,6 +898,7 @@ function buildSliders() {
   DEPTS.forEach(d => {
     state[d.id] = startMode === 'actual' ? d.actual : 0;
   });
+  const showRefBars = startMode === 'reference' || startMode === 'actual';
 
   // Phase badge
   const badgeDiv = document.createElement('div');
@@ -882,8 +915,8 @@ function buildSliders() {
   const legend = document.createElement('div');
   legend.className = 'bar-legend';
   legend.innerHTML = `
-    <span class="actual-legend" id="actual-legend">
-      <span class="bl-sw" style="width:18px;background:var(--stone);opacity:.5"></span>City actual
+    <span class="actual-legend ${showRefBars ? 'visible' : ''}" id="actual-legend">
+      <span class="bl-sw" style="width:18px;background:var(--stone);opacity:.5"></span>City actual 2026
     </span>
     <span><span class="bl-sw" style="width:18px;background:var(--city-blue)"></span>Your allocation</span>
     <span style="color:var(--text3);font-size:.58rem">\u2014 bars share the same scale</span>
@@ -933,7 +966,7 @@ function buildSliders() {
             <div class="bar-tick" style="left:50%"></div>
             <div class="bar-tick" style="left:75%"></div>
           </div>
-          <div class="bar-actual" id="bar-actual-${dept.id}" style="width:${aPct}%"></div>
+          <div class="bar-actual ${showRefBars ? 'visible' : ''}" id="bar-actual-${dept.id}" style="width:${aPct}%"></div>
           <div class="bar-yours" id="bar-yours-${dept.id}" style="width:${initPct}%;background:${cluster.hex}cc"></div>
           <div class="bar-thumb ${initVal===0?'at-zero':''}" id="thumb-${dept.id}" ${initVal>0?`style="left:calc(${initPct}% - 2px)"`:''}></div>
           <input type="range" id="slider-${dept.id}"
@@ -1174,7 +1207,21 @@ function buildShareCard(diffs, allocated, overBudget) {
         <h3>Your budget snapshot</h3>
         <p>Screenshot or share to show your priorities</p>
       </div>
-      <button class="screenshot-btn" onclick="window.print()">&#x1F4F7; Screenshot / Print</button>
+      <div class="share-download-row">
+        <button class="dl-btn" onclick="window.print()" title="Print or save as PDF">
+          <span class="dl-icon">&#x1F5A8;</span> Print / PDF
+        </button>
+        <button class="dl-btn instagram" id="dl-instagram" onclick="downloadCard('instagram')" title="1080×1350 — optimized for Instagram">
+          <span class="dl-icon">&#x1F4F8;</span>
+          <span class="spinner"></span>
+          Instagram (4:5)
+        </button>
+        <button class="dl-btn reddit" id="dl-reddit" onclick="downloadCard('reddit')" title="1200×628 — optimized for Reddit / Twitter">
+          <span class="dl-icon">&#x1F4E4;</span>
+          <span class="spinner"></span>
+          Reddit / Twitter
+        </button>
+      </div>
     </div>
     <div class="share-card" id="share-card">
       <div class="sc-top">
@@ -1218,6 +1265,121 @@ function buildShareCard(diffs, allocated, overBudget) {
       </div>
     </div>
   </div>`;
+}
+
+
+
+// ── Image download ─────────────────────────────────────────────
+function loadHtml2Canvas() {
+  return new Promise((resolve, reject) => {
+    if (window.html2canvas) { resolve(window.html2canvas); return; }
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload = () => resolve(window.html2canvas);
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+async function downloadCard(format) {
+  const btnId = 'dl-' + format;
+  const btn = document.getElementById(btnId);
+  btn.classList.add('loading', 'disabled');
+
+  try {
+    const h2c = await loadHtml2Canvas();
+    const card = document.getElementById('share-card');
+    if (!card) { alert('Submit your budget first to generate the share card.'); return; }
+
+    // Dimensions
+    const configs = {
+      instagram: { w: 1080, h: 1350, label: 'bloomington-budget-instagram.png' },
+      reddit:    { w: 1200, h: 628,  label: 'bloomington-budget-reddit.png'    },
+    };
+    const cfg = configs[format];
+
+    // Capture the card at high resolution
+    const cardRect = card.getBoundingClientRect();
+    const scale = cfg.w / cardRect.width;
+
+    const canvas = await h2c(card, {
+      scale: scale * window.devicePixelRatio,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#F5F0E8',
+      logging: false,
+      width: cardRect.width,
+      height: cardRect.height,
+    });
+
+    // For Instagram (portrait): pad with city-blue background top and bottom
+    // For Reddit (landscape): pad left/right with cream background
+    const out = document.createElement('canvas');
+    out.width  = cfg.w * window.devicePixelRatio;
+    out.height = cfg.h * window.devicePixelRatio;
+    const ctx = out.getContext('2d');
+
+    if (format === 'instagram') {
+      // City blue top banner + cream bottom
+      ctx.fillStyle = '#0f2d5c';
+      ctx.fillRect(0, 0, out.width, out.height);
+
+      // Card centered with padding
+      const padding = Math.round(cfg.w * 0.05) * window.devicePixelRatio;
+      const cardW = out.width - padding * 2;
+      const cardH = Math.round(canvas.height * (cardW / canvas.width));
+      const cardY = Math.round((out.height - cardH) / 2);
+
+      // Draw card
+      ctx.drawImage(canvas, padding, cardY, cardW, cardH);
+
+      // Top label
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.font = `${Math.round(28 * window.devicePixelRatio)}px 'DM Mono', monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText('CITY OF BLOOMINGTON, INDIANA • 2026 BUDGET', out.width/2, Math.round(cardY * 0.55));
+
+      // Bottom label
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.font = `${Math.round(22 * window.devicePixelRatio)}px 'DM Mono', monospace`;
+      ctx.fillText('bsquarebulletin.com • bloomington.in.gov/city/budget', out.width/2, cardY + cardH + Math.round((out.height - cardY - cardH) * 0.55));
+
+    } else {
+      // Reddit: cream background, card centered
+      ctx.fillStyle = '#F5F0E8';
+      ctx.fillRect(0, 0, out.width, out.height);
+
+      const padding = Math.round(cfg.h * 0.05) * window.devicePixelRatio;
+      const cardH = out.height - padding * 2;
+      const cardW = Math.round(canvas.width * (cardH / canvas.height));
+      const cardX = Math.round((out.width - cardW) / 2);
+
+      // Subtle shadow
+      ctx.shadowColor = 'rgba(0,0,0,0.12)';
+      ctx.shadowBlur  = 20 * window.devicePixelRatio;
+      ctx.shadowOffsetY = 4 * window.devicePixelRatio;
+      ctx.drawImage(canvas, cardX, padding, cardW, cardH);
+      ctx.shadowColor = 'transparent';
+
+      // Source credit bottom right
+      ctx.fillStyle = '#8A8278';
+      ctx.font = `${Math.round(18 * window.devicePixelRatio)}px 'DM Mono', monospace`;
+      ctx.textAlign = 'right';
+      ctx.fillText('bsquarebulletin.com', out.width - padding, out.height - Math.round(padding * 0.4));
+    }
+
+    // Trigger download
+    const link = document.createElement('a');
+    link.download = cfg.label;
+    link.href = out.toDataURL('image/png', 1.0);
+    link.click();
+
+  } catch(err) {
+    console.error('Download failed:', err);
+    alert('Download failed: ' + err.message + '. Try the Print/PDF option instead.');
+  } finally {
+    btn.classList.remove('loading', 'disabled');
+  }
 }
 
 
@@ -1530,6 +1692,17 @@ function submitBudget() {
 
 function resetAll() {
   revealed = false;
+  // Reset mode to blank
+  startMode = 'blank';
+  _prevState = null;
+  _prevMode = null;
+  ['blank','reference','actual'].forEach(m => {
+    const btn = document.getElementById('btn-' + m);
+    if (btn) btn.className = 'mode-btn' + (m === 'blank' ? ' active' : '');
+  });
+  const desc = document.getElementById('mode-desc');
+  if (desc) desc.textContent = 'All sliders start at $0 — no anchors, no hints. Your choices reflect what you actually value. Hardest, most revealing.';
+
   DEPTS.forEach(d => {
     state[d.id] = 0;
     const s = document.getElementById(`slider-${d.id}`);
