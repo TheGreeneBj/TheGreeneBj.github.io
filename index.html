@@ -450,6 +450,79 @@ input[type=range] {
 .sc-footer-stat b { color: var(--text); }
 .sc-footer-brand { font-family: var(--font-mono); font-size: .55rem; color: var(--text3); }
 
+
+/* ── Results tabs ── */
+.results-tabs {
+  display: flex; gap: 0; margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+}
+.results-tab {
+  font-family: var(--font-mono); font-size: .7rem; font-weight: 500;
+  padding: .55rem 1.1rem; border: none; background: none; cursor: pointer;
+  color: var(--text3); border-bottom: 2px solid transparent;
+  margin-bottom: -2px; transition: all .15s; letter-spacing: .03em;
+  text-transform: uppercase;
+}
+.results-tab:hover { color: var(--text2); }
+.results-tab.active { color: var(--city-blue); border-bottom-color: var(--city-blue); }
+.results-tab-panel { display: none; }
+.results-tab-panel.active { display: block; }
+
+/* ── Peer comparison panel ── */
+.peer-loading { text-align: center; padding: 2rem; font-family: var(--font-mono); font-size: .75rem; color: var(--text3); }
+.peer-filters {
+  display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center;
+}
+.peer-filter-btn {
+  font-family: var(--font-mono); font-size: .62rem; padding: .25rem .65rem;
+  border-radius: 99px; border: 1px solid var(--border2);
+  background: var(--white); color: var(--text2); cursor: pointer; transition: all .15s;
+}
+.peer-filter-btn:hover { border-color: var(--city-blue); color: var(--city-blue); }
+.peer-filter-btn.active { background: var(--city-blue); border-color: var(--city-blue); color: white; }
+.peer-metric-select {
+  margin-left: auto; font-family: var(--font-mono); font-size: .65rem;
+  padding: .25rem .55rem; border: 1px solid var(--border2); border-radius: var(--r);
+  background: var(--white); color: var(--text); cursor: pointer;
+}
+
+.peer-table { width: 100%; border-collapse: collapse; font-size: .72rem; }
+.peer-table th {
+  font-family: var(--font-mono); font-size: .58rem; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--text3); padding: .4rem .6rem;
+  border-bottom: 1.5px solid var(--border2); text-align: left; white-space: nowrap;
+}
+.peer-table th.num { text-align: right; }
+.peer-table td { padding: .45rem .6rem; border-bottom: 1px solid var(--cream3); vertical-align: middle; }
+.peer-table tr:last-child td { border-bottom: none; }
+.peer-table tr.subject td { background: var(--blue-xlight); font-weight: 600; }
+.peer-table tr:hover td { background: var(--cream2); }
+.peer-table tr.subject:hover td { background: var(--blue-light); }
+.peer-city-name { font-weight: 500; color: var(--text); }
+.peer-city-state { font-family: var(--font-mono); font-size: .6rem; color: var(--text3); }
+.peer-city-note { font-size: .6rem; color: var(--text3); margin-top: .1rem; font-family: var(--font-mono); }
+.peer-num { font-family: var(--font-mono); text-align: right; white-space: nowrap; }
+.peer-bar-cell { width: 120px; }
+.peer-bar-wrap { background: var(--cream2); border-radius: 2px; height: 8px; overflow: hidden; }
+.peer-bar-fill { height: 100%; border-radius: 2px; transition: width .3s; }
+.peer-highlight { color: var(--city-blue); font-weight: 700; }
+.peer-high { color: var(--red); }
+.peer-low  { color: var(--green); }
+
+.peer-insight {
+  background: var(--blue-xlight); border: 1px solid var(--blue-light);
+  border-left: 3px solid var(--city-blue);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: .85rem 1.1rem; margin-top: 1.25rem;
+  font-size: .78rem; color: var(--text2); line-height: 1.65;
+}
+.peer-insight strong { color: var(--text); }
+.peer-source {
+  font-family: var(--font-mono); font-size: .58rem; color: var(--text3);
+  margin-top: .85rem; padding-top: .65rem; border-top: 1px solid var(--border);
+  line-height: 1.5;
+}
+
 /* ── Results ── */
 .reveal-panel { display: none; padding: 0 1.5rem 8rem; }
 .reveal-panel.open { display: block; }
@@ -686,7 +759,21 @@ input[type=range] {
     <h2>Bloomington&rsquo;s actual 2026 budget &mdash; revealed</h2>
   </div>
   <div class="score-grid" id="score-grid"></div>
-  <div id="results-body"></div>
+
+  <div class="results-tabs">
+    <button class="results-tab active" onclick="switchTab('my-budget', this)">&#x1F4CA; My budget</button>
+    <button class="results-tab" onclick="switchTab('peer-compare', this)">&#x1F3D9; Compare to other cities</button>
+  </div>
+
+  <div class="results-tab-panel active" id="tab-my-budget">
+    <div id="results-body"></div>
+  </div>
+
+  <div class="results-tab-panel" id="tab-peer-compare">
+    <div id="peer-panel">
+      <div class="peer-loading">Loading city data&hellip;</div>
+    </div>
+  </div>
 </div>
 
 <!-- CTA -->
@@ -1131,6 +1218,204 @@ function buildShareCard(diffs, allocated, overBudget) {
       </div>
     </div>
   </div>`;
+}
+
+
+// ── Tab switching ──────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.results-tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.results-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'peer-compare' && !window._peerDataLoaded) loadPeerData();
+}
+
+// ── Peer city comparison ───────────────────────────────────────
+let _peerData = null;
+let _peerFilter = 'all';
+let _peerMetric = 'pct_public_safety';
+window._peerDataLoaded = false;
+
+const METRIC_CONFIG = {
+  pct_public_safety:  { label: '% to Emergency Services (Police + Fire)', format: v => v.toFixed(1) + '%', desc: 'Share of general fund going to police, fire, and dispatch combined' },
+  pct_parks:          { label: '% to Parks & Recreation',                  format: v => v.toFixed(1) + '%', desc: 'Share of general fund going to parks, recreation, and open space' },
+  pct_human_services: { label: '% to Human Services',                      format: v => v.toFixed(1) + '%', desc: 'Housing, community development, social services, health (city-funded)' },
+  pct_infrastructure: { label: '% to Infrastructure',                      format: v => v.toFixed(1) + '%', desc: 'Public works, engineering, planning, streets' },
+  per_capita_gf:      { label: 'Per-capita GF spending ($)',               format: v => '$' + Math.round(v).toLocaleString(), desc: 'Total general fund divided by city population' },
+  sworn_police_per_1k:{ label: 'Sworn police per 1,000 residents',         format: v => v.toFixed(2), desc: 'Authorized sworn officer positions per 1,000 population' },
+  firefighters_per_1k:{ label: 'Firefighters per 1,000 residents',         format: v => v.toFixed(2), desc: 'Authorized firefighter positions per 1,000 population' },
+  employees_per_1k:   { label: 'Total city employees per 1,000 residents', format: v => v.toFixed(1), desc: 'All full-time equivalent city employees per 1,000 population' },
+};
+
+const GROUP_LABELS = {
+  all:           'All cities',
+  indiana_college:'IN college towns',
+  indiana:       'Indiana cities',
+  college_town:  'College towns (national)',
+  major:         'Major US cities',
+};
+
+async function loadPeerData() {
+  try {
+    const res = await fetch('peer-cities.json');
+    _peerData = await res.json();
+    window._peerDataLoaded = true;
+    renderPeerPanel();
+  } catch(e) {
+    document.getElementById('peer-panel').innerHTML =
+      '<div class="peer-loading" style="color:var(--red)">Could not load city data. Make sure peer-cities.json is in the same folder as the HTML file.</div>';
+  }
+}
+
+function renderPeerPanel() {
+  if (!_peerData) return;
+
+  // Compute Bloomington user values
+  const userSafetyPct = (() => {
+    const safety = DEPTS.filter(d=>d.cluster==='safety').reduce((a,d)=>a+state[d.id],0);
+    const total = Object.values(state).reduce((a,b)=>a+b,0);
+    return total > 0 ? safety/total*100 : null;
+  })();
+
+  // Filter cities
+  const allCities = _peerData.cities;
+  const filtered = _peerFilter === 'all' ? allCities :
+    allCities.filter(c => c.group === _peerFilter || c.group === 'subject');
+
+  // Sort by metric (Bloomington always pinned)
+  const sorted = [...filtered].sort((a,b) => {
+    if (a.group === 'subject') return -1;
+    if (b.group === 'subject') return 1;
+    return (a[_peerMetric] || 0) - (b[_peerMetric] || 0);
+  });
+
+  const cfg = METRIC_CONFIG[_peerMetric];
+  const values = sorted.map(c => c[_peerMetric] || 0);
+  const maxVal = Math.max(...values) * 1.05;
+  const bloom = allCities.find(c => c.group === 'subject');
+
+  // Build filter + metric controls
+  let html = '<div class="peer-filters">';
+  ['all','indiana_college','indiana','college_town','major'].forEach(g => {
+    html += `<button class="peer-filter-btn ${_peerFilter===g?'active':''}"
+      onclick="setPeerFilter('${g}')">${GROUP_LABELS[g]}</button>`;
+  });
+  html += '<select class="peer-metric-select" onchange="setPeerMetric(this.value)">';
+  Object.entries(METRIC_CONFIG).forEach(([k,v]) => {
+    html += `<option value="${k}" ${_peerMetric===k?'selected':''}>${v.label}</option>`;
+  });
+  html += '</select></div>';
+
+  html += `<div style="font-size:.68rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:.75rem">${cfg.desc}</div>`;
+
+  // Table
+  html += `<table class="peer-table">
+    <thead><tr>
+      <th>City</th>
+      <th>State</th>
+      <th class="num">Population</th>
+      <th class="num">${cfg.label}</th>
+      <th class="peer-bar-cell"></th>
+      <th class="num">vs Bloomington</th>
+    </tr></thead><tbody>`;
+
+  sorted.forEach(city => {
+    const val = city[_peerMetric] || 0;
+    const bloomVal = bloom[_peerMetric] || 0;
+    const diff = val - bloomVal;
+    const isSubject = city.group === 'subject';
+    const barPct = maxVal > 0 ? (val/maxVal*100).toFixed(1) : 0;
+    const barColor = isSubject ? 'var(--city-blue)' : 'var(--stone)';
+
+    // Determine if high/low relative to Bloomington
+    const diffClass = isSubject ? '' : (Math.abs(diff) < 1 ? '' : diff > 0 ? 'peer-high' : 'peer-low');
+
+    // For per-capita and employees, higher isn’t necessarily bad
+    const isNeutral = ['per_capita_gf','employees_per_1k'].includes(_peerMetric);
+    const diffDisplay = isSubject ? '— (you are here)' :
+      (Math.abs(diff) < 0.1 ? '≈ same' : (diff > 0 ? '+' : '') + (cfg.format(diff).replace('$-','-$')));
+
+    const groupTag = {
+      indiana_college: 'IN college town',
+      indiana: 'Indiana',
+      college_town: 'College town',
+      major: 'Major city',
+      subject: 'This report'
+    }[city.group] || '';
+
+    html += `<tr class="${isSubject ? 'subject' : ''}">
+      <td>
+        <div class="peer-city-name ${isSubject ? 'peer-highlight' : ''}">${city.name}</div>
+        <div class="peer-city-state">${groupTag}${city.university ? ' &bull; ' + city.university : ''}</div>
+      </td>
+      <td class="peer-city-state">${city.state}</td>
+      <td class="peer-num">${city.population.toLocaleString()}</td>
+      <td class="peer-num" style="font-weight:${isSubject?'700':'400'}">${cfg.format(val)}</td>
+      <td class="peer-bar-cell">
+        <div class="peer-bar-wrap">
+          <div class="peer-bar-fill" style="width:${barPct}%;background:${barColor}"></div>
+        </div>
+      </td>
+      <td class="peer-num ${isNeutral ? '' : diffClass}">${diffDisplay}</td>
+    </tr>`;
+
+    // Show user’s allocation row right under Bloomington
+    if (isSubject && userSafetyPct !== null && _peerMetric === 'pct_public_safety') {
+      const userBarPct = maxVal > 0 ? (userSafetyPct/maxVal*100).toFixed(1) : 0;
+      const userDiff = userSafetyPct - bloomVal;
+      html += `<tr style="background:rgba(30,75,142,.04)">
+        <td colspan="2">
+          <div class="peer-city-name" style="color:var(--green)">&#x2713; Your allocation</div>
+          <div class="peer-city-state">What you submitted for emergency services</div>
+        </td>
+        <td class="peer-num" style="color:var(--text3)">79,168</td>
+        <td class="peer-num" style="color:var(--green);font-weight:700">${userSafetyPct.toFixed(1)}%</td>
+        <td class="peer-bar-cell">
+          <div class="peer-bar-wrap">
+            <div class="peer-bar-fill" style="width:${userBarPct}%;background:var(--green)"></div>
+          </div>
+        </td>
+        <td class="peer-num" style="color:${userDiff>0?'var(--red)':'var(--green)'}">
+          ${userDiff > 0 ? '+' : ''}${userDiff.toFixed(1)}% vs actual
+        </td>
+      </tr>`;
+    }
+  });
+
+  html += '</tbody></table>';
+
+  // Auto-generated insight
+  const bloomVal = bloom[_peerMetric] || 0;
+  const otherVals = filtered.filter(c=>c.group!=='subject').map(c=>c[_peerMetric]||0);
+  const avg = otherVals.reduce((a,b)=>a+b,0)/otherVals.length;
+  const rank = [...filtered].filter(c=>c.group!=='subject').filter(c=>(c[_peerMetric]||0) < bloomVal).length + 1;
+  const total = filtered.filter(c=>c.group!=='subject').length + 1;
+  const pctile = Math.round(rank/total*100);
+
+  html += `<div class="peer-insight">
+    <strong>How Bloomington compares:</strong> At ${cfg.format(bloomVal)}, Bloomington ranks
+    <strong>#${rank} of ${total} cities</strong> on ${cfg.label.toLowerCase()}.
+    The peer average is ${cfg.format(avg)} &mdash;
+    Bloomington is <strong>${cfg.format(Math.abs(bloomVal-avg))} ${bloomVal>avg?'above':'below'} average</strong>.
+    ${bloomVal > avg * 1.1 ? ' This is notably higher than typical for comparable cities.' : bloomVal < avg * 0.9 ? ' This is notably lower than typical for comparable cities.' : ' This is within the typical range for comparable cities.'}
+  </div>`;
+
+  html += `<div class="peer-source">
+    Sources: FY2023–2024 adopted budgets, US Census ACS 2023, ICMA, Lincoln Institute of Land Policy, individual city budget documents. Figures normalized to general fund equivalent. Some estimates from published summaries.
+    Direct comparisons are imperfect — budget structures vary significantly by state and city type. Use as directional context.
+  </div>`;
+
+  document.getElementById('peer-panel').innerHTML = html;
+}
+
+function setPeerFilter(group) {
+  _peerFilter = group;
+  renderPeerPanel();
+}
+
+function setPeerMetric(metric) {
+  _peerMetric = metric;
+  renderPeerPanel();
 }
 
 function submitBudget() {
