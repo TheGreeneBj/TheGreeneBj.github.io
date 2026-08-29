@@ -853,15 +853,61 @@ let startMode = 'blank'; // 'blank', 'reference', or 'actual'
 
 // ── Mode toggle ────────────────────────────────────────────────
 function setMode(mode) {
+  const prevMode = startMode;
+  // Snapshot state before changing so we can restore on accidental click
+  const snapshot = Object.assign({}, state);
+
   startMode = mode;
-  document.getElementById('btn-blank').className  = 'mode-btn' + (mode==='blank' ? ' active' : '');
-  document.getElementById('btn-actual').className = 'mode-btn' + (mode==='actual'? ' active' : '');
+
+  // Update all three button classes
+  ['blank','reference','actual'].forEach(m => {
+    const btn = document.getElementById('btn-' + m);
+    if (btn) btn.className = 'mode-btn' + (m === mode ? ' active' : '');
+  });
+
+  // Update description
   const desc = document.getElementById('mode-desc');
-  if (mode === 'blank') {
-    desc.textContent = 'All sliders start at $0. You\'re not anchored by the city\'s choices, so your allocation reflects what you actually value \u2014 not what you think sounds reasonable given what already exists. Harder, but more honest.';
-  } else {
-    desc.textContent = 'Sliders pre-fill with the city\'s real 2026 numbers. Easier to engage with, but you may find yourself only tweaking at the margins \u2014 anchored to choices already made by others.';
+  if (desc) {
+    const descs = {
+      blank:     'All sliders start at $0 — no anchors, no hints. Your choices reflect what you actually value. Hardest, most revealing.',
+      reference: 'Sliders stay at $0 but the city’s actual spending shows as a faint bar behind each slider. Use it as a reference without being locked in.',
+      actual:    'Sliders pre-fill at the city’s real 2026 numbers. Easiest — just adjust what you’d change. But you may anchor to existing choices without realising it.',
+    };
+    desc.textContent = descs[mode] || '';
   }
+
+  // Show or hide the reference bars
+  const showRef = mode === 'reference' || mode === 'actual';
+  DEPTS.forEach(d => {
+    const bar = document.getElementById('bar-actual-' + d.id);
+    if (bar) {
+      if (showRef) bar.classList.add('visible');
+      else         bar.classList.remove('visible');
+    }
+  });
+  const actualLegend = document.getElementById('actual-legend');
+  if (actualLegend) {
+    if (showRef) actualLegend.classList.add('visible');
+    else         actualLegend.classList.remove('visible');
+  }
+
+  // Set slider values
+  DEPTS.forEach(d => {
+    let newVal;
+    if (mode === 'actual') {
+      // Always fill with actual budget
+      newVal = d.actual;
+    } else if (mode === 'reference' || mode === 'blank') {
+      // Coming from 'actual'? Reset to zero. Otherwise keep what user had.
+      newVal = prevMode === 'actual' ? 0 : snapshot[d.id];
+    }
+    state[d.id] = newVal;
+    const slider = document.getElementById('slider-' + d.id);
+    if (slider) slider.value = newVal;
+    refreshDept(d.id);
+  });
+
+  updateGlobal();
 }
 
 // ── Build sliders ──────────────────────────────────────────────
@@ -894,7 +940,7 @@ function buildSliders() {
   const panel = document.getElementById('sliders-panel');
   panel.innerHTML = '';
 
-  // Apply start mode
+  // Apply start mode values
   DEPTS.forEach(d => {
     state[d.id] = startMode === 'actual' ? d.actual : 0;
   });
