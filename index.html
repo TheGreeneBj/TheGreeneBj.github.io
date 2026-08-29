@@ -1864,9 +1864,26 @@ async function sendToSheets(payload) {
   try {
     const encoded = encodeURIComponent(JSON.stringify(payload));
     const url = APPS_SCRIPT_URL + "?data=" + encoded;
-    new Image().src = url;
-    fetch(url, {mode:"no-cors"}).catch(()=>{});
-  } catch(e) {}
+
+    // Primary: GET fetch following redirects (Apps Script redirects before executing)
+    try {
+      await fetch(url, { method:"GET", mode:"no-cors", redirect:"follow" });
+    } catch(e1) {
+      // Fallback 1: hidden iframe (follows redirects, bypasses CORS)
+      try {
+        const fr = document.createElement("iframe");
+        fr.style.cssText = "display:none;width:0;height:0;border:none";
+        fr.src = url;
+        document.body.appendChild(fr);
+        setTimeout(() => { try { document.body.removeChild(fr); } catch(e){} }, 6000);
+      } catch(e2) {
+        // Fallback 2: image ping
+        new Image().src = url;
+      }
+    }
+  } catch(e) {
+    console.warn("[Telemetry]", e);
+  }
 }
 
 function buildSessionPayload() {
